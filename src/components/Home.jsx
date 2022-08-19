@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import MainAd from "../img/mainAd.jpg";
+import Footer from "./Footer";
 import HomeList from "./HomeList";
 
 const Home = () => {
@@ -24,47 +25,55 @@ const Home = () => {
         </ImgWrap>
       </ArticleWrap>
       <HomeList />
+      <Footer />
     </div>
   );
 };
 
 export default Home;
 
-const ArticleWrap = styled.article`
+const ArticleWrap = styled.div`
   background-color: #fbf7f2;
   display: flex;
-  flex-direction: row;
+  height: 90vh;
+  width: 100%;
+  margin: 0 auto;
   justify-content: center;
-  height: 80vh;
   @media screen and (max-width: 556px) {
     flex-direction: column;
     padding: 30px 0;
   }
 `;
 const TextWrap = styled.div`
-  padding-left: 12%;
-  padding-top: 12%;
-  width: 50%;
-  max-width: 360px;
+  padding-left: 10%;
+  padding-top: 15%;
+  /* width: 50%; */
+  max-width: 50%;
   @media screen and (max-width: 556px) {
-    width: 90%;
+    padding-left: 0%;
+    padding-top: 0%;
+    margin: auto;
+    width: 100%;
   }
 `;
 const ImgWrap = styled.div`
-  width: 65%;
   height: 100%;
+  margin-left: 13%;
   @media screen and (max-width: 556px) {
     width: 90%;
+    margin-left: 0;
   }
 `;
 const Img = styled.img`
   object-fit: contain;
+  padding-left: 5%;
   width: 100%;
   height: 100%;
 `;
 const SubTitle = styled.h2`
   font-size: 47px;
   text-align: left;
+  font-weight: bold;
   margin-bottom: 32px;
   @media screen and (max-width: 556px) {
     text-align: center;
