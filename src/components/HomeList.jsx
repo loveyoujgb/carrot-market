@@ -120,13 +120,14 @@ const SelectBox = styled.div`
   display: flex;
   justify-content: right;
   margin-right: 15%;
+  margin-bottom: 2%;
   gap: 10px;
 `;
 const ListWrap = styled.div`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  width: 75%;
+  width: 68%;
   margin: 0 auto;
 `;
 const BoxWrap = styled.div`
@@ -134,8 +135,8 @@ const BoxWrap = styled.div`
   flex-direction: column;
 `;
 const ImageBox = styled.img`
-  width: 212px;
-  height: 212px;
+  width: 200px;
+  height: 200px;
   box-sizing: border-box;
   border-radius: 12px;
   margin: 5px;
