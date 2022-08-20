@@ -5,6 +5,7 @@ import "./index.css";
 // import { store } from './store/config';
 import { store } from "./redux/config/configStore";
 import { Provider } from "react-redux";
+import "bulma/css/bulma.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
