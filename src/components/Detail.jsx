@@ -3,23 +3,54 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import manner from "../img/manner.png";
 import back from "../img/back.png";
+import { MdOutlineArrowBackIos } from "react-icons/md";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
-import { Columns } from "react-bulma-components";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const Detail = (props) => {
-  console.log(props);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [heart, setHeart] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // const { detailContent, isLoading, error } = useSelector((state) => state.movies);
+
   const openModal = () => {
     setModalOpen(true);
   };
+
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const onClickDelete = () => {
+    // dispatch(__delete());
+  };
+  const onClickEdit = () => {
+    // dispatch(__edit());
+  };
+
+  const onClickHeart = () => {
+    setHeart(!heart);
+  };
+
   return (
     <>
       <ViewItemWrap>
+        <BackButtonWrap>
+          <BackButton
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <MdOutlineArrowBackIos size="25" />
+            <CgHome style={{ marginLeft: "10px" }} size="25" />
+          </BackButton>
+        </BackButtonWrap>
         <FirstWrap>
           <ItemImg back={back}></ItemImg>
           <SecondWrap></SecondWrap>
@@ -43,8 +74,8 @@ const Detail = (props) => {
             <Modal open={modalOpen} close={closeModal}>
               <main>
                 <ButtonInModalWrap>
-                  <ButtonInModal>삭제하기</ButtonInModal>
-                  <ButtonInModal>수정하기</ButtonInModal>
+                  <ButtonInModal onClick={onClickDelete}>삭제하기</ButtonInModal>
+                  <ButtonInModal onClick={onClickEdit}>수정하기</ButtonInModal>
                 </ButtonInModalWrap>
               </main>
             </Modal>
@@ -53,8 +84,8 @@ const Detail = (props) => {
           <ContentPrice>30,000원</ContentPrice>
           <ContentContent>작은 집으로 이사가요. 당근톡 고고</ContentContent>
           <LikeWrap>
-            <IoMdHeart size="25" />
-            {/* <IoMdHeartEmpty size="25" /> */}
+            {heart ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
+
             <ContentLike>관심120 · 댓글100</ContentLike>
           </LikeWrap>
         </ContentWrap>
@@ -65,13 +96,30 @@ const Detail = (props) => {
 
 export default Detail;
 
+const BackButtonWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #cecece;
+`;
+
+const BackButton = styled.div`
+  margin-top: 8px;
+  cursor: pointer;
+`;
+
 const ViewItemWrap = styled.div`
   width: 100%;
 `;
 
 //Item Image
 const FirstWrap = styled.div`
-  height: 500px;
+  height: 400px;
 `;
 const ItemImg = styled.div`
   background-image: url(${(props) => props.back});

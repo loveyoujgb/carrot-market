@@ -101,13 +101,14 @@ const LogoLink = styled.div`
 
 const Title = styled.h1`
   cursor: pointer;
-  color: #ff7236;
+  color: #ff7518;
   font-weight: bold;
   font-size: 20px;
   margin: 5px 0 0 20px;
 `;
 
 const LogoImg = styled.div`
+  cursor: pointer;
   background-image: url(${(props) => props.logo});
   display: inline-block;
   width: 100px;

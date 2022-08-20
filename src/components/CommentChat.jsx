@@ -52,6 +52,7 @@ const SecondMessageWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  margin-bottom: 10px;
 `;
 
 const FirstSellerMessageWrap = styled.div`
@@ -87,8 +88,8 @@ const Message = styled.div`
   color: white;
   padding: 8px 20px;
   border-radius: 40px;
-  height: 40px;
-  background-color: #ff7316;
+  min-height: 40px;
+  background-color: #ff7518;
   display: table-cell;
   vertical-align: middle;
 `;
@@ -97,8 +98,11 @@ const SellerMessage = styled.div`
   color: black;
   padding: 8px 20px;
   border-radius: 40px;
-  height: 40px;
-  background-color: #d6d6d6eb;
+  min-height: 40px;
+  background-color: #e9e9e9eb;
   display: table-cell;
   vertical-align: middle;
+  /* @media screen and (max-width: 556px) {
+    background-color: green;
+  } */
 `;

@@ -1,15 +1,76 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import manner from "../img/manner.png";
 import back from "../img/back.png";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Form = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
+  const [region, setRegiont] = useState();
+  const [category, setCategory] = useState();
+
+  console.log(price, region, category, title, content);
+
+  const onChangeTitleHandler = (e) => {
+    setTitle(e.currentTarget.value);
+  };
+  const onChangeContentHandler = (e) => {
+    setContent(e.currentTarget.value);
+  };
+
+  const onChangeRegionHandler = (e) => {
+    setRegiont(e.currentTarget.value);
+  };
+
+  const onChangeCategoryHandler = (e) => {
+    setCategory(e.currentTarget.value);
+  };
+
+  const RegionOptions = [
+    { key: 1, value: "지역을 선택하세요" },
+    { key: 2, value: "서울특별시" },
+    { key: 3, value: "부산광역시" },
+    { key: 4, value: "인천광역시" },
+    { key: 5, value: "경기도" },
+    { key: 6, value: "강원도" },
+    { key: 7, value: "충청북도" },
+    { key: 8, value: "충청남도" },
+    { key: 9, value: "전라북도" },
+    { key: 10, value: "전라남도" },
+    { key: 11, value: "경상북도" },
+    { key: 12, value: "경상남도" },
+    { key: 13, value: "제주특별자치도" },
+  ];
 
   const onChanePrice = (e) => {
     setPrice(e.target.value);
+  };
+
+  const CategoryOptions = [
+    { key: 1, value: "카테고리를 선택하세요" },
+    { key: 2, value: "생활가전" },
+    { key: 3, value: "생활용품" },
+    { key: 4, value: "의류" },
+    { key: 5, value: "잡화" },
+    { key: 6, value: "디지털기기" },
+  ];
+
+  const onClickSubmit = () => {
+    // dispatch(postContent({
+    //   photo:photo,
+    //   title:title,
+    //   region:region,
+    //   category:category,
+    //   price:price,
+    //   content:content,
+    // }))
+    console.log(price, region, category, title, content);
+    navigate("/");
   };
 
   return (
@@ -17,29 +78,59 @@ const Form = () => {
       <ViewItemWrap>
         <FirstWrap>
           <Title>
-            <MdOutlineArrowBackIos style={{ marginRight: "10px" }} size="25" />
+            <BackButton
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              <MdOutlineArrowBackIos size="25" />
+            </BackButton>
             <div>중고거래 글쓰기</div>
           </Title>
           <AddPhotoButton>
-            <MdAddAPhoto size="50px" />
+            <MdAddAPhoto size="30px" />
           </AddPhotoButton>
           <div>
             <SecondWrap></SecondWrap>
             <ItemImg back={back}></ItemImg>
           </div>
-          <Input placeholder="제목"></Input>
-          <PriveWrap>
+          <Input onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
+          {/* select box */}
+          <SelectBox>
+            <StSelect onChange={onChangeRegionHandler} value={region}>
+              {RegionOptions.map((item, index) => (
+                <option key={item.key} value={item.value}>
+                  {item.value}
+                </option>
+              ))}
+            </StSelect>
+            <StSelect onChange={onChangeCategoryHandler} value={category}>
+              {CategoryOptions.map((item, index) => (
+                <option key={item.key} value={item.value}>
+                  {item.value}
+                </option>
+              ))}
+            </StSelect>
+          </SelectBox>
+          <PriceWrap>
             <PriceInput value={price} type="number" onChange={onChanePrice} placeholder="₩ 가격(선택사항)" placeholderTextColor="green"></PriceInput>
             <StPriceView>{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</StPriceView>
-          </PriveWrap>
-          <Textarea cols="50" rows="8" maxLength="200" placeholder="게시글 내용을 작성해주세요. 가품 및 판매금지품목은 게시가 제한될 수 있습니다." />
+          </PriceWrap>
+          <Textarea
+            onChange={onChangeContentHandler}
+            value={content}
+            cols="50"
+            rows="8"
+            maxLength="200"
+            placeholder="게시글 내용을 작성해주세요. 가품 및 판매금지품목은 게시가 제한될 수 있습니다."
+          />
           <BottomTextWrap>
             <MdOutlinePostAdd />
             <BottomText>자주 쓰는 문구 </BottomText>
             <MdOutlineTune />
             <BottomText>보여줄 동네 설정</BottomText>
           </BottomTextWrap>
-          <AddButton>완료</AddButton>
+          <AddButton onClick={onClickSubmit}>완료</AddButton>
         </FirstWrap>
       </ViewItemWrap>
     </>
@@ -53,10 +144,18 @@ const Title = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
+  border-bottom: 1px solid #e9ecef;
 `;
+
+const BackButton = styled.div`
+  margin: 8px 10px 0 0;
+  cursor: pointer;
+`;
+
 const Input = styled.input`
   font-size: 15px;
   outline: none;
@@ -65,10 +164,6 @@ const Input = styled.input`
   height: 35px;
   border: 1px solid transparent;
   border-bottom: 1px solid #e9ecef;
-  /* :focus {
-    border: none;
-    outline: 1px solid #e9ecef;
-  } */
 `;
 const Textarea = styled.textarea`
   font-size: 15px;
@@ -77,13 +172,9 @@ const Textarea = styled.textarea`
   width: 100%;
   border: 1px solid transparent;
   border-bottom: 1px solid #e9ecef;
-  /* :focus {
-    border: none;
-    outline: 1px solid #e9ecef;
-  } */
 `;
 
-const PriveWrap = styled.div`
+const PriceWrap = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -101,20 +192,33 @@ const PriceInput = styled.input`
   width: 50%;
   height: 35px;
   border: none;
-  /* border-bottom: 1px solid #e9ecef; */
-  /* :focus {
-    border: none;
-    outline: 1px solid #e9ecef;
-  } */
 `;
 
 const StPriceView = styled.div`
   font-size: 18px;
   font-weight: bold;
   text-align: right;
-  /* padding: 30px 15px; */
   width: 50%;
-  /* height: 35px; */
+`;
+
+const SelectBox = styled.div`
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+`;
+
+const StSelect = styled.select`
+  margin: 5px 0;
+  color: #696969;
+  font-size: 15px;
+  border: 1px solid #e9e9e9;
+  padding: 10px;
+  width: 100%;
+  height: 43px;
+  border-radius: 5px;
+  :focus {
+    outline: none;
+  }
 `;
 
 const ViewItemWrap = styled.div`
@@ -139,10 +243,14 @@ const ItemImg = styled.div`
 //UserInfo
 const Button = styled.button``;
 const AddPhotoButton = styled.button`
+  cursor: pointer;
+  :hover {
+    border: 1px solid #c2c2c2;
+  }
   background-color: transparent;
   border: 1px solid #e9ecef;
   border-radius: 10px;
-  padding: 10px 13px 10px 10px;
+  padding: 20px 23px 20px 20px;
 `;
 
 const SecondWrap = styled.div``;
@@ -167,7 +275,8 @@ const AddButton = styled.div`
   text-align: center;
   cursor: pointer;
   margin: 20px auto;
+  padding-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
-  color: #ff7236;
+  color: #ff8a3d;
 `;
