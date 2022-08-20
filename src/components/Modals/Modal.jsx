@@ -6,7 +6,7 @@ const Modal = (props) => {
   console.log(props);
 
   return (
-    <div className={open ? "openModal modal" : "modal"}>
+    <div className={open ? "openModal modalstyle" : "modalstyle"}>
       {open ? (
         <section>
           <header>
