@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../img/logo.png";
 import { useNavigate } from "react-router-dom";
+import LoginModal from "./LoginModals/LoginModal.jsx";
+import KakaoImg from "../img/KakaoImg.png";
 
-const Header = () => {
+const Header = (props) => {
   const navigate = useNavigate();
+  console.log(props);
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     <Container>
@@ -25,10 +35,36 @@ const Header = () => {
           </Title>
         </LogoLink>
         <RightWrap>
-          <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} className="button is-white">
+          <button
+            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
+            onClick={openModal}
+            className="button is-white"
+          >
             로그인
           </button>
-          <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} className="button is-white">
+          <LoginModal open={modalOpen} close={closeModal}>
+            <main>
+              <ButtonInModalWrap>
+                <img
+                  style={{ width: "50%", marginTop: "8%" }}
+                  src={logo}
+                  alt="이미지"
+                />
+                <h2 style={{ fontWeight: "bold" }}>
+                  우리 동네 중고 직거래 마켓
+                </h2>
+                <p style={{ fontSize: "0.8rem", textAlign: "center" }}>
+                  내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
+                </p>
+
+                <img style={{ width: "80%" }} src={KakaoImg} alt="이미지" />
+              </ButtonInModalWrap>
+            </main>
+          </LoginModal>
+          <button
+            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
+            className="button is-white"
+          >
             회원가입
           </button>
         </RightWrap>
@@ -87,4 +123,15 @@ const RightWrap = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+const ButtonInModalWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* margin: 3%; */
+  box-sizing: border-box;
 `;
