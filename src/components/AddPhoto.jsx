@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
 import styled from "styled-components";
-
 const Previews = (props) => {
   console.log(props);
   const [files, setFiles] = useState([]);
-  const [addFiles, sestAddFiles] = useState({});
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
+    maxSize: 100000000, //100메가
     accept: {
-      "image/*": [],
+      "image/jpeg": [],
+      "image/png": [], // 두가지 형식만 가능
     },
     onDrop: (acceptedFiles) => {
+      console.log(files.length);
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -20,11 +21,26 @@ const Previews = (props) => {
           })
         )
       );
-      sestAddFiles(files);
     },
   });
   console.log(acceptedFiles);
-  console.log(addFiles);
+  console.log(files);
+
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <div key={file.path}>
+      {errors.map((e) => {
+        console.log(errors);
+        return (
+          <div style={{ marginLeft: "10px" }} key={e.code}>
+            {e.code}
+          </div>
+        );
+      })}
+    </div>
+  ));
+
+  // console.log(addFiles);
+  // dispatch(addPhoto(addFiles));
 
   // const uploadFiles = () => {
   //   let formData = new FormData();
@@ -65,6 +81,7 @@ const Previews = (props) => {
         <Length>{files.length}/5</Length>
       </StButton>
       <ThumbsContainer>{thumbs}</ThumbsContainer>
+      <div>{fileRejectionItems}</div>
     </Container>
   );
 };
@@ -92,21 +109,11 @@ const Length = styled.span`
 
 const Thumb = styled.div`
   display: inline-flex;
-  /* border-radius: 15px; */
-  /* border: 1px solid #eaeaea; */
-  /* margin-bottom: 8px;
-  margin-right: 8px; */
   width: 80px;
   height: 80px;
   padding: 4px;
   box-sizing: border-box;
 `;
-
-const thumbInner = {
-  // display: "flex",
-  // minWidth: 0,
-  // overflow: "hidden",
-};
 
 const Img = styled.img`
   border-radius: 12px;
@@ -128,11 +135,4 @@ const StButton = styled.div`
   border-radius: 10px;
   padding: 18px 23px;
   position: relative;
-`;
-
-const StEm = styled.em`
-  width: 100%;
-  height: 100%;
-  /* border: none; */
-  border-radius: 15px;
 `;
