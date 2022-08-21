@@ -38,6 +38,24 @@ const Detail = (props) => {
     setHeart(!heart);
   };
 
+  // const DropdownIndicator = (props) => {
+  //   return (
+  //     <components.DropdownIndicator {...props}>
+  //       <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
+  //     </components.DropdownIndicator>
+  //   );
+  // };
+
+  // const [detailOption, setDetailOption] = useState();
+  // const onChangeDetailHandler = (e) => {
+  //   setDetailOption(e.currentTarget.value);
+  // };
+  // const DetailOptions = [
+  //   { key: 1, value: "게시글 수정" },
+  //   { key: 2, value: "게시글 수정" },
+  //   { key: 3, value: "삭제" },
+  // ];
+
   return (
     <>
       <ViewItemWrap>
@@ -51,6 +69,13 @@ const Detail = (props) => {
             <CgHome style={{ marginLeft: "10px" }} size="25" />
           </BackButton>
         </BackButtonWrap>
+        {/* <StSelect components={{ DropdownIndicator }} onChange={onChangeDetailHandler} value={detailOption}>
+          {DetailOptions.map((item, index) => (
+            <option key={item.key} value={item.value}>
+              {item.value}
+            </option>
+          ))}
+        </StSelect> */}
         <FirstWrap>
           <ItemImg back={back}></ItemImg>
           <SecondWrap></SecondWrap>
@@ -115,6 +140,20 @@ const BackButton = styled.div`
 
 const ViewItemWrap = styled.div`
   width: 100%;
+`;
+
+const StSelect = styled.select`
+  margin: 5px 0;
+  color: #696969;
+  font-size: 15px;
+  border: 1px solid #e9e9e9;
+  padding: 10px;
+  width: 50px;
+  height: 43px;
+  border-radius: 5px;
+  :focus {
+    outline: none;
+  }
 `;
 
 //Item Image

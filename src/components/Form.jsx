@@ -3,7 +3,8 @@ import styled from "styled-components";
 import back from "../img/back.png";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import AddPhtoPreviews from "./AddPhoto";
 
 const Form = () => {
   const navigate = useNavigate();
@@ -13,6 +14,10 @@ const Form = () => {
   const [price, setPrice] = useState("");
   const [region, setRegiont] = useState();
   const [category, setCategory] = useState();
+
+  // const { detailContent, isLoading, error } = useSelector((state) => state.movies);
+
+  const { form } = useSelector((state) => state);
 
   console.log(price, region, category, title, content);
 
@@ -70,6 +75,7 @@ const Form = () => {
     //   content:content,
     // }))
     console.log(price, region, category, title, content);
+    console.log(form);
     navigate("/");
   };
 
@@ -85,10 +91,11 @@ const Form = () => {
             >
               <MdOutlineArrowBackIos size="25" />
             </BackButton>
-            <div>중고거래 글쓰기</div>
+            {/* 이미지 업로드 */}
           </Title>
           <AddPhotoButton>
-            <MdAddAPhoto size="30px" />
+            <AddPhtoPreviews />
+            {/* <MdAddAPhoto size="30px" /> */}
           </AddPhotoButton>
           <div>
             <SecondWrap></SecondWrap>
@@ -242,15 +249,15 @@ const ItemImg = styled.div`
 //------------------------------------>
 //UserInfo
 const Button = styled.button``;
-const AddPhotoButton = styled.button`
-  cursor: pointer;
+const AddPhotoButton = styled.div`
+  /* cursor: pointer;
   :hover {
     border: 1px solid #c2c2c2;
   }
   background-color: transparent;
   border: 1px solid #e9ecef;
   border-radius: 10px;
-  padding: 20px 23px 20px 20px;
+  padding: 20px 23px 20px 20px; */
 `;
 
 const SecondWrap = styled.div``;
