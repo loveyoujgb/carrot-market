@@ -1,7 +1,6 @@
 import React from "react";
 import Detail from "../components/Detail";
 import Layout from "../components/Layout";
-import Comment from "../components/Comment";
 import styled from "styled-components";
 
 const DetailPage = () => {
@@ -9,7 +8,6 @@ const DetailPage = () => {
     <Layout>
       <ViewPageWrap>
         <Detail />
-        <Comment />
       </ViewPageWrap>
     </Layout>
   );
