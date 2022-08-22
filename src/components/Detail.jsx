@@ -10,7 +10,6 @@ import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Comment from "./Comment";
 
 const Detail = (props) => {
   const navigate = useNavigate();
@@ -91,7 +90,6 @@ const Detail = (props) => {
           </LikeWrap>
         </ContentWrap>
       </ViewItemWrap>
-      <Comment />
     </>
   );
 };

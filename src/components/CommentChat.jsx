@@ -4,13 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { __deleteComments, __readComments } from "../redux/modules/commentsSlice";
 
-const CommentChat = ({comment}) => {
+const CommentChat = () => {
 const navigate=useNavigate();
 const dispatch=useDispatch();
 const param= useParams();
+const detailId=parseInt(param.id)
 
   // useEffect(() => {
-  //   dispatch(__readComments());
+  //   dispatch(__readComments(detailId));
   // }, []);
   
 const {comments} = useSelector((state) => state.comments);
