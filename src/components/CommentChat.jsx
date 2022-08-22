@@ -1,22 +1,54 @@
-import React from "react";
+import React,{useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { __deleteComments, __readComments } from "../redux/modules/commentsSlice";
 
 const CommentChat = () => {
+const navigate=useNavigate();
+const dispatch=useDispatch();
+const param= useParams();
+const detailId=parseInt(param.id)
+
+  // useEffect(() => {
+  //   dispatch(__readComments(detailId));
+  // }, [dispatch]);
+  
+const {comments} = useSelector((state) => state.comments);
+ console.log(comments)
+
+
+//댓글 지우기
+const DoubleClickHandler=()=>{
+  console.log("더블클릭!!")
+  if(window.confirm("정말 삭제합니까?")){
+    // dispatch(__deleteComments())
+    alert("삭제되었습니다")
+    navigate("/detail")
+  }else{
+    alert("취소합니다")
+    navigate("/detail")
+  }
+
+}
+
   return (
     <>
+{/* 구매자 */}
       <CommentChatWrqp>
         <FirstMessageWrap>
           <SecondMessageWrap>
             <Time>오전 10:00</Time>
             <FirstMessageWrap>
               <UsernameText style={{ margin: "0 10px" }}>구매자</UsernameText>
-              <Message>얼마인가요 네고되나요</Message>
+              <Message onDoubleClick={DoubleClickHandler}>얼마인가요 네고되나요</Message>
             </FirstMessageWrap>
             <UserInfoImg />
           </SecondMessageWrap>
         </FirstMessageWrap>
         <SecondMessageWrap>
           <UserInfoImg />
+{/* 게시물 작성자 */}
           <FirstSellerMessageWrap>
             <UsernameText style={{ margin: "0 10px" }}>판매자</UsernameText>
             <SellerMessage>안되는데요</SellerMessage>

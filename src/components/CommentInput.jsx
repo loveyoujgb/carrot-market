@@ -1,24 +1,32 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import chatting from "../img/chatting.png";
 import { BiSmile } from "react-icons/bi";
 import { BsPlusLg } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import { __postComments } from "../redux/modules/commentsSlice";
+import { useState } from "react";
 
 const ConmmentInput = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [input, setInput] = useState("");
+  const onChangeHandler = (e) => {
+    setInput(e.target.value);
+  };
+  const onClickHandler = () => {
+    dispatch(__postComments({ content: input }));
+    setInput("")
+  };
 
   return (
     <CommentWrap>
       <InputWrap>
         <BsPlusLg style={{ marginRight: "10px" }} size="30" color="#c4c4c4eb" />
-        <Input />
+        <Input value={input} type="text" onChange={onChangeHandler} />
         {/* <BiSmile size="35" color="#d6d6d6eb" /> */}
-        <ButtonImg
-          onClick={() => {
-            navigate("/");
-          }}
-          chatting={chatting}
-        />
+        <ButtonImg onClick={onClickHandler} chatting={chatting} />
       </InputWrap>
     </CommentWrap>
   );
