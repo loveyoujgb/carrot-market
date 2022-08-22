@@ -8,6 +8,7 @@ import KakaoImg from "../img/KakaoImg.png";
 const Header = (props) => {
   const navigate = useNavigate();
   console.log(props);
+
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => {
     setModalOpen(true);
@@ -35,24 +36,14 @@ const Header = (props) => {
           </Title>
         </LogoLink>
         <RightWrap>
-          <button
-            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-            onClick={openModal}
-            className="button is-white"
-          >
+          <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} onClick={openModal} className="button is-white">
             로그인
           </button>
           <LoginModal open={modalOpen} close={closeModal}>
             <main>
               <ButtonInModalWrap>
-                <img
-                  style={{ width: "50%", marginTop: "8%" }}
-                  src={logo}
-                  alt="이미지"
-                />
-                <h2 style={{ fontWeight: "bold" }}>
-                  우리 동네 중고 직거래 마켓
-                </h2>
+                <img style={{ width: "50%", marginTop: "8%" }} src={logo} alt="이미지" />
+                <h2 style={{ fontWeight: "bold" }}>우리 동네 중고 직거래 마켓</h2>
                 <p style={{ fontSize: "0.8rem", textAlign: "center" }}>
                   내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
                 </p>
@@ -61,10 +52,7 @@ const Header = (props) => {
               </ButtonInModalWrap>
             </main>
           </LoginModal>
-          <button
-            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-            className="button is-white"
-          >
+          <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} className="button is-white">
             회원가입
           </button>
         </RightWrap>
