@@ -1,13 +1,21 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { __readLists } from "../redux/modules/listSlice";
 
 const HomeList = () => {
+  const dispatch=useDispatch();
+
+  // useEffect(() => {
+  // dispatch(__readLists());
+  // }, [dispatch]);
+
+  const {lists} = useSelector((state) => state.lists);
+  
   const [region, setRegion]=useState("")
   const onChangeRegion=(e=>{
     setRegion(e.currentTarget.value)
   })
-  console.log(region)
 
   const regionOptions = [
     { key: 1, value: "지역을 선택하세요" },
@@ -28,8 +36,6 @@ const [category,setCategory]=useState("");
 const onChangeCategory=(e)=>{
   setCategory(e.currentTarget.value)
 }
-console.log(category)
-
   const categoryOptions = [
     { key: 1, value: "카테고리를 선택하세요" },
     { key: 2, value: "생활가전" },
@@ -57,60 +63,22 @@ console.log(category)
           </select>
         </div>
       </SelectBox>
-
       <ListWrap>
+        {lists.map((list)=>(
         <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
+          <ImageBox src={list.img} />
           <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
+            <BoxContent margin="6px 0">{list.title}</BoxContent>
             <BoxContent margin="2px 0" bold="bold">
-              가격
+              {list.price}
             </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
+            <BoxContent size="0.8rem">{list.region}</BoxContent>
             <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
+              <span>관심 {list.heartCnt}</span>∙<span>댓글 {list.commentCnt}</span>
             </BoxContent>
           </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
+        </BoxWrap>     
+        ))}
       </ListWrap>
     </HomeListWrap>
   );

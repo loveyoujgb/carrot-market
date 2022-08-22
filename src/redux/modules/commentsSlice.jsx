@@ -75,7 +75,7 @@ export const commentsSlice = createSlice({
     [__deleteComments.pending]: (state) => {
       state.isLoading = true;
     },
-    [__deleteComments.fulfilled]: (state, { payload }) => {
+    [__deleteComments.fulfilled]: (state, {payload}) => {
       state.isLoading = false;
       state.comments = state.comments.filter(
         (comment) => comment.id !== payload
@@ -87,5 +87,5 @@ export const commentsSlice = createSlice({
   },
 });
 
-export const {} = commentsSlice.actions;
+
 export default commentsSlice.reducer;

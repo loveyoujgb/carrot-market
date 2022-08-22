@@ -12,7 +12,7 @@ const detailId=parseInt(param.id)
 
   // useEffect(() => {
   //   dispatch(__readComments(detailId));
-  // }, []);
+  // }, [dispatch]);
   
 const {comments} = useSelector((state) => state.comments);
  console.log(comments)
