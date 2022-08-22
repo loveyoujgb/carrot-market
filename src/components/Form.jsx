@@ -1,18 +1,140 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import back from "../img/back.png";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 const Form = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
+  //유저가 수정버튼을 클릭했을 경우..~
+  const { mode, id } = useSelector((state) => state.detail.changeMode);
+  console.log(mode, id);
+
+  //---------------------------------->
   const [region, setRegiont] = useState();
   const [category, setCategory] = useState();
+  //사진업로드
+  const [files, setFiles] = useState([]);
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
+    maxFiles: 5,
+    maxSize: 100000000, //100메가
+    accept: {
+      "image/jpeg": [],
+      "image/png": [], // 두가지 형식만 가능
+    },
+    onDrop: (acceptedFiles) => {
+      console.log(files.length);
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        )
+      );
+    },
+  });
+
+  console.log(acceptedFiles);
+  console.log(files);
+
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <div key={file.path}>
+      {errors.map((e) => {
+        console.log(errors);
+        return (
+          <div style={{ marginLeft: "10px" }} key={e.code}>
+            {e.code}
+          </div>
+        );
+      })}
+    </div>
+  ));
+
+  const thumbs = files.map((file) => (
+    <Thumb key={file.name}>
+      <Img
+        src={file.preview}
+        // Revoke data uri after image is loaded
+        onLoad={() => {
+          URL.revokeObjectURL(file.preview);
+        }}
+      />
+    </Thumb>
+  ));
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
+  }, []);
+
+  const onClickSubmit = async () => {
+    // e.persist(); 찾아보기..이게뭐지?
+    let formData = new FormData();
+    for (var i = 0; i < acceptedFiles.length; i++) {
+      let file = acceptedFiles[i];
+      formData.append("imageFiles[]", file);
+    }
+    let dataSet = {
+      title: title,
+      region: region,
+      category: category,
+      price: price,
+      content: content,
+    };
+    formData.append("textData", JSON.stringify(dataSet));
+    try {
+      await axios({
+        method: "post",
+        url: `${API_URL}/article/auth`,
+        headers: {
+          "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+          // Authorization: token,
+        },
+        data: formData,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //수정
+  const onClickChangeSubmit = async () => {
+    let formData = new FormData();
+    for (var i = 0; i < acceptedFiles.length; i++) {
+      let file = acceptedFiles[i];
+      formData.append("imageFiles[]", file);
+    }
+    let dataSet = {
+      title: title,
+      region: region,
+      category: category,
+      price: price,
+      content: content,
+    };
+    formData.append("data", JSON.stringify(dataSet));
+    try {
+      await axios({
+        method: "patch",
+        url: `${API_URL}/article/auth/${id}`,
+        headers: {
+          "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+        },
+        data: formData,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //----------------------------------------------->
+
+  const { form } = useSelector((state) => state);
 
   console.log(price, region, category, title, content);
 
@@ -60,19 +182,6 @@ const Form = () => {
     { key: 6, value: "디지털기기" },
   ];
 
-  const onClickSubmit = () => {
-    // dispatch(postContent({
-    //   photo:photo,
-    //   title:title,
-    //   region:region,
-    //   category:category,
-    //   price:price,
-    //   content:content,
-    // }))
-    console.log(price, region, category, title, content);
-    navigate("/");
-  };
-
   return (
     <>
       <ViewItemWrap>
@@ -85,13 +194,21 @@ const Form = () => {
             >
               <MdOutlineArrowBackIos size="25" />
             </BackButton>
-            <div>중고거래 글쓰기</div>
           </Title>
-          <AddPhotoButton>
-            <MdAddAPhoto size="30px" />
-          </AddPhotoButton>
+          {/* <AddPhotoButton> */}
+          {/* 이미지 업로드 */}
+          <Container>
+            <input {...getInputProps()} />
+            <StButton {...getRootProps()}>
+              <MdAddAPhoto size="30px" />
+              <Length>{files.length}/5</Length>
+            </StButton>
+            <ThumbsContainer>{thumbs}</ThumbsContainer>
+            <div>{fileRejectionItems}</div>
+          </Container>
+          {/* <AddPhtoPreviews /> */}
+          {/* </AddPhotoButton> */}
           <div>
-            <SecondWrap></SecondWrap>
             <ItemImg back={back}></ItemImg>
           </div>
           <Input onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
@@ -130,7 +247,7 @@ const Form = () => {
             <MdOutlineTune />
             <BottomText>보여줄 동네 설정</BottomText>
           </BottomTextWrap>
-          <AddButton onClick={onClickSubmit}>완료</AddButton>
+          {mode ? <AddButton onClick={onClickChangeSubmit}>수정 완료</AddButton> : <AddButton onClick={onClickSubmit}>완료</AddButton>}
         </FirstWrap>
       </ViewItemWrap>
     </>
@@ -239,22 +356,6 @@ const ItemImg = styled.div`
   margin: 0 auto;
   border-radius: 10px;
 `;
-//------------------------------------>
-//UserInfo
-const Button = styled.button``;
-const AddPhotoButton = styled.button`
-  cursor: pointer;
-  :hover {
-    border: 1px solid #c2c2c2;
-  }
-  background-color: transparent;
-  border: 1px solid #e9ecef;
-  border-radius: 10px;
-  padding: 20px 23px 20px 20px;
-`;
-
-const SecondWrap = styled.div``;
-
 //---------------------------------------->
 //content
 const BottomTextWrap = styled.div`
@@ -279,4 +380,55 @@ const AddButton = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: #ff8a3d;
+`;
+
+//사진 업로드
+
+const ThumbsContainer = styled.aside`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const Container = styled.section`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+`;
+
+const Length = styled.span`
+  font-size: 12px;
+  position: absolute;
+  bottom: 10px;
+  left: 31px;
+`;
+
+const Thumb = styled.div`
+  display: inline-flex;
+  width: 80px;
+  height: 80px;
+  padding: 4px;
+  box-sizing: border-box;
+`;
+
+const Img = styled.img`
+  border-radius: 12px;
+  display: block;
+  width: auto;
+  height: 100%;
+  margin-left: 5px;
+`;
+
+const StButton = styled.div`
+  cursor: pointer;
+  :hover {
+    border: 1px solid #999999;
+  }
+  width: 80px;
+  height: 80px;
+  background-color: #f1f1f1;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  padding: 18px 23px;
+  position: relative;
 `;

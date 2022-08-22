@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import manner from "../img/manner.png";
@@ -8,16 +8,45 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import detailSlice, { changeMode, __getDetail, __postUserHeart } from "../redux/modules/detailSlice";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 const Detail = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [heart, setHeart] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  //작성자인지 확인 후 수정 버튼show hide설정
+  const username = localStorage.getItem("username");
+  console.log(username);
+  const [userCheck, setUserCheck] = useState(false);
+  //user heart post 하면 아래거 지우기
+  const [like, setLike] = useState(false);
+  const param = useParams();
+  // const { userheart, detail, isLoading, error } = useSelector((state) => state.detail);
+  // const movie = movies.find((movie) => movie.boardId === parseInt(param.id));
 
-  // const { detailContent, isLoading, error } = useSelector((state) => state.movies);
+  useEffect(() => {
+    // dispatch(__getDetail({ id: param.id }));
+    if (username === null) {
+      // 로그인 안한경우
+      return;
+    } else {
+      setUserCheck(true);
+    }
+    // if (username === detail.username) {
+    //   // 로그인 유저정보와, 현재 디테일 창의 작성자와 일치여부 확인
+    //   setUserCheck(true);
+    // } else {
+    //   return;
+    // }
+  }, []);
 
   const openModal = () => {
     setModalOpen(true);
@@ -31,12 +60,33 @@ const Detail = (props) => {
     // dispatch(__delete());
   };
   const onClickEdit = () => {
-    // dispatch(__edit());
+    // dispatch(changeMode({ mode: true }));
+    dispatch(changeMode({ mode: true, id: param.id }));
+    navigate("/form");
   };
 
   const onClickHeart = () => {
-    setHeart(!heart);
+    // dispatch(__postUserHeart({id: param.id))
+    setLike(!like);
   };
+
+  // const DropdownIndicator = (props) => {
+  //   return (
+  //     <components.DropdownIndicator {...props}>
+  //       <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
+  //     </components.DropdownIndicator>
+  //   );
+  // };
+
+  // const [detailOption, setDetailOption] = useState();
+  // const onChangeDetailHandler = (e) => {
+  //   setDetailOption(e.currentTarget.value);
+  // };
+  // const DetailOptions = [
+  //   { key: 1, value: "게시글 수정" },
+  //   { key: 2, value: "게시글 수정" },
+  //   { key: 3, value: "삭제" },
+  // ];
 
   return (
     <>
@@ -51,26 +101,60 @@ const Detail = (props) => {
             <CgHome style={{ marginLeft: "10px" }} size="25" />
           </BackButton>
         </BackButtonWrap>
+        {/* <StSelect components={{ DropdownIndicator }} onChange={onChangeDetailHandler} value={detailOption}>
+          {DetailOptions.map((item, index) => (
+            <option key={item.key} value={item.value}>
+              {item.value}
+            </option>
+          ))}
+        </StSelect> */}
         <FirstWrap>
-          <ItemImg back={back}></ItemImg>
-          <SecondWrap></SecondWrap>
+          <Swiper
+            style={{ height: "400px", width: "100%" }}
+            // install Swiper modules
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            // scrollbar={{ draggable: true }}
+            onSwiper={(swiper) => console.log(swiper)}
+            onSlideChange={() => console.log("slide change")}
+          >
+            {/* {detail.file.map( (photo) =>
+           ( <SwiperSlide>
+            <ItemImg back={photo}></ItemImg>
+          </SwiperSlide>
+          )
+          )} */}
+            <SwiperSlide>Slide 1</SwiperSlide>
+            <SwiperSlide>Slide 2</SwiperSlide>
+            <SwiperSlide>Slide 3</SwiperSlide>
+            <SwiperSlide>Slide 4</SwiperSlide>
+          </Swiper>
+          {/* <ItemImg back={back}></ItemImg> */}
         </FirstWrap>
         <UserInfoFirstWrap>
           <UserInfoWrap>
             <UserInfoImg />
             <UerInpo>
               <Username to="/">유저정보</Username>
+              {/* <Username to="/">{detail.username}</Username> */}
               <UserRegion>주소</UserRegion>
+              {/* <UserRegion>{detail.region}</UserRegion> */}
             </UerInpo>
           </UserInfoWrap>
           <MannerImg manner={manner} />
         </UserInfoFirstWrap>
         <ContentWrap>
           <TitleWrap>
+            {/* <ContentTitle>{detail.title}</ContentTitle> */}
             <ContentTitle>위니아 제습기 팝니다.</ContentTitle>
-            <ModalButton onClick={openModal}>
-              <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
-            </ModalButton>
+            {userCheck ? (
+              <ModalButton onClick={openModal}>
+                <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
+              </ModalButton>
+            ) : null}
             <Modal open={modalOpen} close={closeModal}>
               <main>
                 <ButtonInModalWrap>
@@ -81,12 +165,16 @@ const Detail = (props) => {
             </Modal>
           </TitleWrap>
           <ContentCategory>생활가전 · 4시간전</ContentCategory>
+          {/* <ContentCategory>{detail.category}</ContentCategory> */}
           <ContentPrice>30,000원</ContentPrice>
+          {/* <ContentPrice>{detail.price}</ContentPrice> */}
           <ContentContent>작은 집으로 이사가요. 당근톡 고고</ContentContent>
+          {/* <ContentContent>{detail.content}</ContentContent> */}
           <LikeWrap>
-            {heart ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
-
+            {like ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
+            {/* {usertHeart ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />} */}
             <ContentLike>관심120 · 댓글100</ContentLike>
+            {/* <ContentLike>관심{detail.heartCnt} · 댓글{detail.commentCnt}</ContentLike> */}
           </LikeWrap>
         </ContentWrap>
       </ViewItemWrap>
@@ -117,9 +205,26 @@ const ViewItemWrap = styled.div`
   width: 100%;
 `;
 
+const StSelect = styled.select`
+  margin: 5px 0;
+  color: #696969;
+  font-size: 15px;
+  border: 1px solid #e9e9e9;
+  padding: 10px;
+  width: 50px;
+  height: 43px;
+  border-radius: 5px;
+  :focus {
+    outline: none;
+  }
+`;
+
 //Item Image
 const FirstWrap = styled.div`
   height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 const ItemImg = styled.div`
   background-image: url(${(props) => props.back});
