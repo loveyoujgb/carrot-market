@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import DetailPage from "../pages/DetailPage";
 import FormPage from "../pages/FormPage";
+import Login from "./Login";
 
 const Router = () => {
   return (
@@ -12,6 +13,7 @@ const Router = () => {
         <Route path="/detail" element={<DetailPage />} />
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/form" element={<FormPage />} />
+        <Route path="/user/kakao/callback" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

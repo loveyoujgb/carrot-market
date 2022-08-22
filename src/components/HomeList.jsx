@@ -1,94 +1,84 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { __readLists } from "../redux/modules/listSlice";
 
 const HomeList = () => {
+  const dispatch=useDispatch();
+
+  // useEffect(() => {
+  // dispatch(__readLists());
+  // }, [dispatch]);
+
+  const {lists} = useSelector((state) => state.lists);
+  
+  const [region, setRegion]=useState("")
+  const onChangeRegion=(e=>{
+    setRegion(e.currentTarget.value)
+  })
+
+  const regionOptions = [
+    { key: 1, value: "지역을 선택하세요" },
+    { key: 2, value: "서울특별시" },
+    { key: 3, value: "부산광역시" },
+    { key: 4, value: "인천광역시" },
+    { key: 5, value: "경기도" },
+    { key: 6, value: "강원도" },
+    { key: 7, value: "충청북도" },
+    { key: 8, value: "충청남도" },
+    { key: 9, value: "전라북도" },
+    { key: 10, value: "전라남도" },
+    { key: 11, value: "경상북도" },
+    { key: 12, value: "경상남도" },
+    { key: 13, value: "제주특별자치도" },
+  ];
+const [category,setCategory]=useState("");
+const onChangeCategory=(e)=>{
+  setCategory(e.currentTarget.value)
+}
+  const categoryOptions = [
+    { key: 1, value: "카테고리를 선택하세요" },
+    { key: 2, value: "생활가전" },
+    { key: 3, value: "생활용품" },
+    { key: 4, value: "의류" },
+    { key: 5, value: "잡화" },
+    { key: 6, value: "디지털기기" },
+  ];
   return (
     <HomeListWrap>
       <HomeListTitle>중고거래 인기매물</HomeListTitle>
       <SelectBox>
         <div className="select">
-          <select>
-            <option>지역을 선택하세요</option>
-            <option>서울특별시</option>
-            <option>부산광역시</option>
-            <option>인천광역시</option>
-            <option>경기도</option>
-            <option>강원도</option>
-            <option>충청북도</option>
-            <option>충청남도</option>
-            <option>전라북도</option>
-            <option>전라남도</option>
-            <option>경상북도</option>
-            <option>경상남도</option>
-            <option>제주특별자치도</option>
+          <select onChange={onChangeRegion} value={region}>
+          {regionOptions.map((region)=>(
+            <option key={region.key} value={region.value}>{region.value}</option>
+          ))}
           </select>
         </div>
         <div className="select">
-          <select>
-            <option>카테고리를 선택하세요</option>
-            <option>생활가전</option>
-            <option>생활용품</option>
-            <option>의류</option>
-            <option>잡화</option>
-            <option>디지털기기</option>
+          <select onChange={onChangeCategory} value={category}>
+           {categoryOptions.map((category)=>(
+            <option key={category.key} value={category.value}>{category.value}</option>
+           ))}
           </select>
         </div>
       </SelectBox>
-
       <ListWrap>
+        {lists.map((list)=>(
         <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
+          <ImageBox src={list.img} />
           <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
+            <BoxContent margin="6px 0">{list.title}</BoxContent>
             <BoxContent margin="2px 0" bold="bold">
-              가격
+              {list.price}
             </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
+            <BoxContent size="0.8rem">{list.region}</BoxContent>
             <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
+              <span>관심 {list.heartCnt}</span>∙<span>댓글 {list.commentCnt}</span>
             </BoxContent>
           </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
-        <BoxWrap>
-          <ImageBox src="https://dnvefa72aowie.cloudfront.net/origin/article/202208/b4db6186b5ee34b312300b380ef1f8629e4a813c54caf135dea99418625b1d8a.webp?q=82s=300x300t=crop" />
-          <ContentWrap>
-            <BoxContent margin="6px 0">상품이름</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              가격
-            </BoxContent>
-            <BoxContent size="0.8rem">지역</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 1</span>∙<span>댓글 1</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>
+        </BoxWrap>     
+        ))}
       </ListWrap>
     </HomeListWrap>
   );
