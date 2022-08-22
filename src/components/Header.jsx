@@ -4,10 +4,12 @@ import logo from "../img/logo.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModals/LoginModal.jsx";
 import KakaoImg from "../img/KakaoImg.png";
+import { IsLogin, Logout } from "../shared/isLogin";
 
 const Header = (props) => {
+  const [IsLogin, setIsLogin] = useState(false);
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT}&response_type=code`;
   const navigate = useNavigate();
-  console.log(props);
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => {
     setModalOpen(true);
@@ -15,7 +17,14 @@ const Header = (props) => {
   const closeModal = () => {
     setModalOpen(false);
   };
+  const onClickHandler = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
+  const onClickDelete = () => {
+    Logout();
+  };
+  console.log(IsLogin);
   return (
     <Container>
       <HeaderWrap>
@@ -35,13 +44,24 @@ const Header = (props) => {
           </Title>
         </LogoLink>
         <RightWrap>
-          <button
-            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-            onClick={openModal}
-            className="button is-white"
-          >
-            로그인
-          </button>
+          {IsLogin !== null ? (
+            <button
+              style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
+              className="button is-white"
+              onClick={onClickDelete}
+            >
+              로그아웃
+            </button>
+          ) : (
+            <button
+              style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
+              onClick={openModal}
+              className="button is-white"
+            >
+              로그인
+            </button>
+          )}
+
           <LoginModal open={modalOpen} close={closeModal}>
             <main>
               <ButtonInModalWrap>
@@ -57,7 +77,12 @@ const Header = (props) => {
                   내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
                 </p>
 
-                <img style={{ width: "80%" }} src={KakaoImg} alt="이미지" />
+                <img
+                  style={{ width: "80%" }}
+                  src={KakaoImg}
+                  alt="이미지"
+                  onClick={onClickHandler}
+                />
               </ButtonInModalWrap>
             </main>
           </LoginModal>
