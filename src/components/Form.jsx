@@ -14,9 +14,7 @@ const Form = () => {
   const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
   const token = localStorage.getItem("token");
-  //유저가 수정버튼을 클릭했을 경우..~
   const { mode, id } = useSelector((state) => state.detail.changeMode);
-  console.log(mode, id);
 
   //---------------------------------->
   const [region, setRegiont] = useState();
@@ -25,13 +23,12 @@ const Form = () => {
   const [files, setFiles] = useState([]);
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
-    maxSize: 100000000, //100메가
+    maxSize: 1000000, //1메가
     accept: {
       "image/jpeg": [],
-      "image/png": [], // 두가지 형식만 가능
+      "image/png": [],
     },
     onDrop: (acceptedFiles) => {
-      console.log(files.length);
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -42,13 +39,9 @@ const Form = () => {
     },
   });
 
-  console.log(acceptedFiles);
-  console.log(files);
-
   const fileRejectionItems = fileRejections.map(({ file, errors }) => (
     <div key={file.path}>
       {errors.map((e) => {
-        console.log(errors);
         return (
           <div style={{ marginLeft: "10px" }} key={e.code}>
             {e.code}
@@ -94,14 +87,7 @@ const Form = () => {
     } else if (files.length === 0) {
       alert("사진을 추가해 주세요.");
     } else {
-      // formData.append("multipartFile", files[0]);
-      // formData.append("multipartFile", acceptedFiles[0].uploadFile);
-
-      // for (var i = 0; i < files.length; i++) {
-      //   formData.append("multipartFile", files[i]);
-      // }
       files.map((file) => formData.append("multipartFile", file));
-      // formdata.append('content', new Blob([JSON.stringify(newInsta)], { type: "application/json" }))
       let dataSet = {
         title: title,
         region: region,
@@ -109,24 +95,14 @@ const Form = () => {
         price: price,
         content: content,
       };
-      console.log(dataSet);
       formData.append("dto", new Blob([JSON.stringify(dataSet)], { type: "application/json" }));
-      // FormData key
-      for (let key of formData.keys()) {
-        console.log(key);
-      }
-      // FormData value
-      for (let value of formData.values()) {
-        console.log(value);
-      }
       try {
         const token = localStorage.getItem("token");
-        console.log(token);
         await axios({
           method: "post",
           url: `${API_URL}/article/auth`,
           headers: {
-            "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+            "Content-Type": "multipart/form-data",
             responseType: "blob",
             Authorization: token,
           },
@@ -134,17 +110,14 @@ const Form = () => {
         });
         navigate("/");
       } catch (error) {
-        console.log(error);
+        return;
       }
     }
   };
   //수정
   const onClickChangeSubmit = async () => {
     let formData = new FormData();
-    for (var i = 0; i < acceptedFiles.length; i++) {
-      let file = acceptedFiles[i];
-      formData.append("imageFiles[]", file);
-    }
+    files.map((file) => formData.append("multipartFile", file));
     let dataSet = {
       title: title,
       region: region,
@@ -152,24 +125,24 @@ const Form = () => {
       price: price,
       content: content,
     };
-    formData.append("data", JSON.stringify(dataSet));
+    formData.append("dto", new Blob([JSON.stringify(dataSet)], { type: "application/json" }));
     try {
+      const token = localStorage.getItem("token");
       await axios({
         method: "patch",
         url: `${API_URL}/article/auth/${id}`,
         headers: {
-          "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+          "Content-Type": "multipart/form-data",
+          responseType: "blob",
           Authorization: token,
         },
         data: formData,
       });
       navigate("/");
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
-  //----------------------------------------------->
-  console.log(price, region, category, title, content);
 
   const onChangeTitleHandler = (e) => {
     setTitle(e.currentTarget.value);
@@ -193,16 +166,10 @@ const Form = () => {
     { key: 4, value: "인천광역시" },
     { key: 5, value: "경기도" },
     { key: 6, value: "강원도" },
-    { key: 7, value: "충청북도" },
-    { key: 8, value: "충청남도" },
-    { key: 9, value: "전라북도" },
-    { key: 10, value: "전라남도" },
-    { key: 11, value: "경상북도" },
-    { key: 12, value: "경상남도" },
-    { key: 13, value: "제주특별자치도" },
   ];
 
   const onChanePrice = (e) => {
+    if (e.target.value.length == 11) return false;
     setPrice(e.target.value);
   };
 
@@ -228,8 +195,6 @@ const Form = () => {
               <MdOutlineArrowBackIos size="25" />
             </BackButton>
           </Title>
-          {/* <AddPhotoButton> */}
-          {/* 이미지 업로드 */}
           <Container>
             <input {...getInputProps()} />
             <StButton {...getRootProps()}>
@@ -239,13 +204,10 @@ const Form = () => {
             <ThumbsContainer>{thumbs}</ThumbsContainer>
             <div>{fileRejectionItems}</div>
           </Container>
-          {/* <AddPhtoPreviews /> */}
-          {/* </AddPhotoButton> */}
           <div>
             <ItemImg back={back}></ItemImg>
           </div>
-          <Input maxLength={30} onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
-          {/* select box */}
+          <Input maxLength="30" onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
           <SelectBox>
             <StSelect onChange={onChangeRegionHandler} value={region}>
               {RegionOptions.map((item) => (

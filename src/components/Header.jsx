@@ -21,8 +21,6 @@ const Header = (props) => {
     setModalOpen(true);
   };
 
-  console.log(token);
-
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -35,7 +33,7 @@ const Header = (props) => {
     setToken(null);
     navigate("/")
   };
-  console.log(IsLogin);
+
   return (
     <Container>
       <HeaderWrap>
@@ -71,28 +69,15 @@ const Header = (props) => {
           <LoginModal open={modalOpen} close={closeModal}>
             <main>
               <ButtonInModalWrap>
-                <img
-                  style={{ width: "50%", marginTop: "8%" }}
-                  src={logo}
-                  alt="이미지"
-                />
-                <h2 style={{ fontWeight: "bold" }}>
-                  우리 동네 중고 직거래 마켓
-                </h2>
+                <img style={{ width: "50%", marginTop: "8%" }} src={logo} alt="이미지" />
+                <h2 style={{ fontWeight: "bold" }}>우리 동네 중고 직거래 마켓</h2>
                 <p style={{ fontSize: "0.8rem", textAlign: "center" }}>
                   내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
                 </p>
-
                 <img style={{ width: "80%" }} src={KakaoImg} alt="이미지" onClick={onClickHandler} />
               </ButtonInModalWrap>
             </main>
           </LoginModal>
-          {/* <button
-            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-            className="button is-white"
-          >
-            회원가입
-          </button> */}
         </RightWrap>
       </HeaderWrap>
     </Container>
@@ -106,6 +91,9 @@ const Container = styled.div`
   width: 75%;
   background-color: #fff;
   margin: 0 auto 5px auto;
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const HeaderWrap = styled.div`
@@ -131,6 +119,9 @@ const Title = styled.h1`
   font-weight: bold;
   font-size: 20px;
   margin: 5px 0 0 20px;
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const LogoImg = styled.div`
@@ -159,6 +150,5 @@ const ButtonInModalWrap = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  /* margin: 3%; */
   box-sizing: border-box;
 `;
