@@ -8,6 +8,7 @@
 export const Logout = () => {
   // localStorage.removeItem("nickname");
   localStorage.clear();
+  window.location.reload();
 };
 
 export const IsLogin = localStorage.getItem("token");
