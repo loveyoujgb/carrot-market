@@ -11,8 +11,9 @@ export const __readLists = createAsyncThunk(
   "getLists",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get("http://localhost:3001/lists");
-      return thunkAPI.fulfillWithValue(data);
+      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
+      console.log(data.data)
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       console.log(error);
       return thunkAPI.rejected(error);
@@ -28,9 +29,9 @@ export const listsSlice = createSlice({
     [__readLists.pending]: (state) => {
       state.isLoading = true;
     },
-    [__readLists.fulfilled]: (state, action) => {
+    [__readLists.fulfilled]: (state, {payload}) => {
       state.isLoading = false;
-      state.modules = action.payload;
+      state.lists = payload;
     },
     [__readLists.rejected]: (state, action) => {
       state.isLoading = false;
