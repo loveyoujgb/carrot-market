@@ -20,7 +20,6 @@ function Login() {
         localStorage.setItem("nickname", nickname);
         alert("로그인 완료!");
         navigate("/");
-        // window.location.reload();
       })
       .catch((err) => {
         console.log("로그인에러", err);

@@ -9,6 +9,13 @@ import { IsLogin, Logout } from "../shared/isLogin";
 const Header = (props) => {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT}&response_type=code`;
   const navigate = useNavigate();
+  const [token, setToken] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+  }, [token]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [token, setToken] = useState(false);
   const openModal = () => {
@@ -33,7 +40,6 @@ const Header = (props) => {
   const onClickDelete = () => {
     Logout();
     setToken(null);
-    // window.location.reload();
   };
   console.log(IsLogin);
   return (
@@ -71,8 +77,14 @@ const Header = (props) => {
           <LoginModal open={modalOpen} close={closeModal}>
             <main>
               <ButtonInModalWrap>
-                <img style={{ width: "50%", marginTop: "8%" }} src={logo} alt="이미지" />
-                <h2 style={{ fontWeight: "bold" }}>우리 동네 중고 직거래 마켓</h2>
+                <img
+                  style={{ width: "50%", marginTop: "8%" }}
+                  src={logo}
+                  alt="이미지"
+                />
+                <h2 style={{ fontWeight: "bold" }}>
+                  우리 동네 중고 직거래 마켓
+                </h2>
                 <p style={{ fontSize: "0.8rem", textAlign: "center" }}>
                   내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
                 </p>
@@ -81,7 +93,10 @@ const Header = (props) => {
               </ButtonInModalWrap>
             </main>
           </LoginModal>
-          <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} className="button is-white">
+          <button
+            style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
+            className="button is-white"
+          >
             회원가입
           </button>
         </RightWrap>

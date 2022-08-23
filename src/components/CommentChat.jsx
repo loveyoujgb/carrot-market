@@ -10,9 +10,9 @@ const dispatch=useDispatch();
 const param= useParams();
 const detailId=parseInt(param.id)
 
-  // useEffect(() => {
-  //   dispatch(__readComments(detailId));
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(__readComments(detailId));
+  }, [dispatch]);
   
 const {comments} = useSelector((state) => state.comments);
  console.log(comments)
@@ -51,7 +51,7 @@ const DoubleClickHandler=()=>{
 {/* 게시물 작성자 */}
           <FirstSellerMessageWrap>
             <UsernameText style={{ margin: "0 10px" }}>판매자</UsernameText>
-            <SellerMessage>안되는데요</SellerMessage>
+            <SellerMessage onDoubleClick={DoubleClickHandler}>안되는데요</SellerMessage>
           </FirstSellerMessageWrap>
           <SellerTime>오전 10:01</SellerTime>
         </SecondMessageWrap>
