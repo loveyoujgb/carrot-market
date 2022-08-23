@@ -10,13 +10,15 @@ import { useState } from "react";
 const ConmmentInput = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const param=useParams()
+  const id=parseInt(param.id)
 
   const [input, setInput] = useState("");
   const onChangeHandler = (e) => {
     setInput(e.target.value);
   };
   const onClickHandler = () => {
-    dispatch(__postComments({ content: input }));
+    dispatch(__postComments({ content: input,id:id }));
     setInput("")
   };
 
