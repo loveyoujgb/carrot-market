@@ -11,8 +11,10 @@ export const __postComments = createAsyncThunk(
   "postComments",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.post("http://localhost:3001/comments", payload);
+      console.log(payload)
+      const data = await axios.post(`${process.env.REACT_APP_API_URL}/auth/${payload.id}`,payload.content);
       console.log(data.data);
+      thunkAPI.dispatch(__readComments(payload.id))
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       console.log(error);
@@ -25,7 +27,7 @@ export const __readComments = createAsyncThunk(
   "getComments",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get("http://localhost:3001/comments");
+      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article/auth/${payload}`);
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
       console.log(error);
@@ -37,7 +39,7 @@ export const __deleteComments = createAsyncThunk(
   "deleteComments",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(`http://localhost:3001/comments/${payload}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/comment/auth/${payload}`);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -55,7 +57,7 @@ export const commentsSlice = createSlice({
     },
     [__postComments.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.comments = [...state.comments, payload];
+      state.comments = [...state.comments, payload.content];
       console.log(state.comments);
     },
     [__postComments.rejected]: (state) => {
