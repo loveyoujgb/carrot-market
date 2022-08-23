@@ -17,16 +17,9 @@ const Header = (props) => {
   }, [token]);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [token, setToken] = useState(false);
   const openModal = () => {
     setModalOpen(true);
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-    console.log(token);
-  }, [token]);
 
   console.log(token);
 
@@ -40,6 +33,7 @@ const Header = (props) => {
   const onClickDelete = () => {
     Logout();
     setToken(null);
+    navigate("/")
   };
   console.log(IsLogin);
   return (
@@ -93,12 +87,12 @@ const Header = (props) => {
               </ButtonInModalWrap>
             </main>
           </LoginModal>
-          <button
+          {/* <button
             style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
             className="button is-white"
           >
             회원가입
-          </button>
+          </button> */}
         </RightWrap>
       </HeaderWrap>
     </Container>

@@ -11,8 +11,13 @@ export const __postComments = createAsyncThunk(
   "postComments",
   async (payload, thunkAPI) => {
     try {
+      const token = localStorage.getItem("token");
       console.log(payload)
-      const data = await axios.post(`${process.env.REACT_APP_API_URL}/auth/${payload.id}`,payload.content);
+      const data = await axios.post(`${process.env.REACT_APP_API_URL}/comment/auth/${payload.id}`,payload,
+      {headers:{
+        Authorization:token,
+      },
+    });
       console.log(data.data);
       thunkAPI.dispatch(__readComments(payload.id))
       return thunkAPI.fulfillWithValue(data.data);
@@ -27,8 +32,10 @@ export const __readComments = createAsyncThunk(
   "getComments",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article/auth/${payload}`);
-      return thunkAPI.fulfillWithValue(data);
+      console.log(payload)
+      const data = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${payload}`);
+      console.log(data)
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       console.log(error);
       return thunkAPI.rejected(error);
@@ -39,7 +46,13 @@ export const __deleteComments = createAsyncThunk(
   "deleteComments",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/comment/auth/${payload}`);
+      console.log(payload)
+      const token = localStorage.getItem("token");
+      await axios.delete(`${process.env.REACT_APP_API_URL}/comment/auth/${payload}`,{
+        headers: {
+          Authorization: token,
+        },
+      });
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -69,7 +82,7 @@ export const commentsSlice = createSlice({
     [__readComments.fulfilled]: (state, { payload }) => {
       console.log(payload.data);
       state.isLoading = false;
-      state.comments = payload.data;
+      state.comments = payload;
     },
     [__readComments.rejected]: (state) => {
       state.isLoading = false;

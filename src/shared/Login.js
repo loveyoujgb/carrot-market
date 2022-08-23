@@ -16,7 +16,7 @@ function Login() {
         console.log(res);
         localStorage.clear();
         localStorage.setItem("token", token);
-        localStorage.setItem("usename", username);
+        localStorage.setItem("username", username);
         localStorage.setItem("nickname", nickname);
         alert("로그인 완료!");
         navigate("/");
