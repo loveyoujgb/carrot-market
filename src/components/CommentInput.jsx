@@ -1,23 +1,23 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import chatting from "../img/chatting.png";
-import { BiSmile } from "react-icons/bi";
 import { BsPlusLg } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { __postComments } from "../redux/modules/commentsSlice";
 import { useState } from "react";
 
 const ConmmentInput = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const param=useParams()
   const id=parseInt(param.id)
+  const token = localStorage.getItem("token")
 
   const [input, setInput] = useState("");
   const onChangeHandler = (e) => {
     setInput(e.target.value);
   };
   const onClickHandler = () => {
+    if (input===""){return alert("입력해주세요!")}
     dispatch(__postComments({ content: input,id:id }));
     setInput("")
   };
@@ -26,7 +26,9 @@ const ConmmentInput = () => {
     <CommentWrap>
       <InputWrap>
         <BsPlusLg style={{ marginRight: "10px" }} size="30" color="#c4c4c4eb" />
-        <Input value={input} type="text" onChange={onChangeHandler} />
+        <Input
+        disabled={!token?true:false}
+        value={input} type="text" onChange={onChangeHandler} LenmaxLength="30" placeholder="30자 이하로 입력해주세요" />
         {/* <BiSmile size="35" color="#d6d6d6eb" /> */}
         <ButtonImg onClick={onClickHandler} chatting={chatting} />
       </InputWrap>

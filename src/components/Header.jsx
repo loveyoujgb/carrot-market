@@ -21,11 +21,6 @@ const Header = (props) => {
     setModalOpen(true);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-  }, [token]);
-
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -36,6 +31,7 @@ const Header = (props) => {
   const onClickDelete = () => {
     Logout();
     setToken(null);
+    navigate("/")
   };
 
   return (
