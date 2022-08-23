@@ -7,7 +7,6 @@ import KakaoImg from "../img/KakaoImg.png";
 import { IsLogin, Logout } from "../shared/isLogin";
 
 const Header = (props) => {
-  // const [IsLogin, setIsLogin] = useState(false);
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT}&response_type=code`;
   const navigate = useNavigate();
   const [token, setToken] = useState(false);
@@ -18,9 +17,19 @@ const Header = (props) => {
   }, [token]);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [token, setToken] = useState(false);
   const openModal = () => {
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+    console.log(token);
+  }, [token]);
+
+  console.log(token);
+
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -45,7 +54,11 @@ const Header = (props) => {
           ></LogoImg>
           <Title
             onClick={() => {
-              navigate("/");
+              if (token) {
+                navigate("/form");
+              } else {
+                alert("로그인 후 이용해 주세요.");
+              }
             }}
           >
             중고거래
@@ -53,19 +66,11 @@ const Header = (props) => {
         </LogoLink>
         <RightWrap>
           {token ? (
-            <button
-              style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-              className="button is-white"
-              onClick={onClickDelete}
-            >
+            <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} className="button is-white" onClick={onClickDelete}>
               로그아웃
             </button>
           ) : (
-            <button
-              style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }}
-              onClick={openModal}
-              className="button is-white"
-            >
+            <button style={{ border: "1px solid #bbbbbb", fontWeight: "bold" }} onClick={openModal} className="button is-white">
               로그인
             </button>
           )}
@@ -84,12 +89,7 @@ const Header = (props) => {
                   내 동네를 설정하고 <br /> 당근마켓을 시작해보세요.
                 </p>
 
-                <img
-                  style={{ width: "80%" }}
-                  src={KakaoImg}
-                  alt="이미지"
-                  onClick={onClickHandler}
-                />
+                <img style={{ width: "80%" }} src={KakaoImg} alt="이미지" onClick={onClickHandler} />
               </ButtonInModalWrap>
             </main>
           </LoginModal>
