@@ -10,7 +10,7 @@ import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import detailSlice, { changeMode, __getDetail, __postUserHeart } from "../redux/modules/detailSlice";
+import detailSlice, { changeMode, __getDetail, __getUserHeart, __postUserHeart } from "../redux/modules/detailSlice";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -24,16 +24,21 @@ const Detail = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   //작성자인지 확인 후 수정 버튼show hide설정
   const username = localStorage.getItem("username");
+  const nickname = localStorage.getItem("nickname");
+  const token = localStorage.getItem("token");
   console.log(username);
+  // 작성자 확인용 useState
   const [userCheck, setUserCheck] = useState(false);
   //user heart post 하면 아래거 지우기
   const [like, setLike] = useState(false);
   const param = useParams();
-  // const { userheart, detail, isLoading, error } = useSelector((state) => state.detail);
+  const { userheart, detail, isLoading, error } = useSelector((state) => state.detail);
   // const movie = movies.find((movie) => movie.boardId === parseInt(param.id));
-
+  console.log(param.id);
+  console.log(detail);
   useEffect(() => {
-    // dispatch(__getDetail({ id: param.id }));
+    dispatch(__getDetail({ id: param.id })); // 이건가 객체인가.. 확인필요
+    // dispatch(__getUserHeart({id: param.id }))
     if (username === null) {
       // 로그인 안한경우
       return;
@@ -42,7 +47,7 @@ const Detail = (props) => {
     }
     // if (username === detail.username) {
     //   // 로그인 유저정보와, 현재 디테일 창의 작성자와 일치여부 확인
-    //   setUserCheck(true);
+    //   setUserCheck(true); // 작성자다!
     // } else {
     //   return;
     // }
@@ -57,7 +62,7 @@ const Detail = (props) => {
   };
 
   const onClickDelete = () => {
-    // dispatch(__delete());
+    // dispatch(__deleteDetail(param.id));
   };
   const onClickEdit = () => {
     // dispatch(changeMode({ mode: true }));
@@ -69,24 +74,6 @@ const Detail = (props) => {
     // dispatch(__postUserHeart({id: param.id))
     setLike(!like);
   };
-
-  // const DropdownIndicator = (props) => {
-  //   return (
-  //     <components.DropdownIndicator {...props}>
-  //       <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
-  //     </components.DropdownIndicator>
-  //   );
-  // };
-
-  // const [detailOption, setDetailOption] = useState();
-  // const onChangeDetailHandler = (e) => {
-  //   setDetailOption(e.currentTarget.value);
-  // };
-  // const DetailOptions = [
-  //   { key: 1, value: "게시글 수정" },
-  //   { key: 2, value: "게시글 수정" },
-  //   { key: 3, value: "삭제" },
-  // ];
 
   return (
     <>
@@ -110,7 +97,7 @@ const Detail = (props) => {
         </StSelect> */}
         <FirstWrap>
           <Swiper
-            style={{ height: "400px", width: "100%" }}
+            style={{ height: "500px", width: "100%" }}
             // install Swiper modules
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={50}
@@ -121,35 +108,37 @@ const Detail = (props) => {
             onSwiper={(swiper) => console.log(swiper)}
             onSlideChange={() => console.log("slide change")}
           >
-            {/* {detail.file.map( (photo) =>
-           ( <SwiperSlide>
-            <ItemImg back={photo}></ItemImg>
-          </SwiperSlide>
-          )
-          )} */}
-            <SwiperSlide>Slide 1</SwiperSlide>
+            {/* {detail.img.map((photo, index) => (
+              <SwiperSlide key={index}>
+                <ItemImg back={photo.imgUrl}></ItemImg>
+              </SwiperSlide>
+            ))} */}
+            <SwiperSlide>
+              <StDiv>
+                <ItemImg back={back}></ItemImg>
+              </StDiv>
+            </SwiperSlide>
             <SwiperSlide>Slide 2</SwiperSlide>
             <SwiperSlide>Slide 3</SwiperSlide>
             <SwiperSlide>Slide 4</SwiperSlide>
           </Swiper>
-          {/* <ItemImg back={back}></ItemImg> */}
         </FirstWrap>
         <UserInfoFirstWrap>
           <UserInfoWrap>
             <UserInfoImg />
             <UerInpo>
-              <Username to="/">유저정보</Username>
-              {/* <Username to="/">{detail.username}</Username> */}
-              <UserRegion>주소</UserRegion>
-              {/* <UserRegion>{detail.region}</UserRegion> */}
+              {/* <Username to="/">유저정보</Username> */}
+              <Username to="/">{detail.nickname}</Username>
+              {/* <UserRegion>주소</UserRegion> */}
+              <UserRegion>{detail.region}</UserRegion>
             </UerInpo>
           </UserInfoWrap>
           <MannerImg manner={manner} />
         </UserInfoFirstWrap>
         <ContentWrap>
           <TitleWrap>
-            {/* <ContentTitle>{detail.title}</ContentTitle> */}
-            <ContentTitle>위니아 제습기 팝니다.</ContentTitle>
+            <ContentTitle>{detail.title}</ContentTitle>
+            {/* <ContentTitle>위니아 제습기 팝니다.</ContentTitle> */}
             {userCheck ? (
               <ModalButton onClick={openModal}>
                 <BiDotsVerticalRounded style={{ cursor: "pointer" }} size="25" />
@@ -164,12 +153,12 @@ const Detail = (props) => {
               </main>
             </Modal>
           </TitleWrap>
-          <ContentCategory>생활가전 · 4시간전</ContentCategory>
-          {/* <ContentCategory>{detail.category}</ContentCategory> */}
-          <ContentPrice>30,000원</ContentPrice>
-          {/* <ContentPrice>{detail.price}</ContentPrice> */}
-          <ContentContent>작은 집으로 이사가요. 당근톡 고고</ContentContent>
-          {/* <ContentContent>{detail.content}</ContentContent> */}
+          {/* <ContentCategory>생활가전 · 4시간전</ContentCategory> */}
+          <ContentCategory>{detail.category}</ContentCategory>
+          {/* <ContentPrice>30,000원</ContentPrice> */}
+          <ContentPrice>{detail.price}</ContentPrice>
+          {/* <ContentContent>작은 집으로 이사가요. 당근톡 고고</ContentContent> */}
+          <ContentContent>{detail.content}</ContentContent>
           <LikeWrap>
             {like ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
             {/* {usertHeart ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />} */}
@@ -221,21 +210,31 @@ const StSelect = styled.select`
 
 //Item Image
 const FirstWrap = styled.div`
-  height: 400px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 const ItemImg = styled.div`
   background-image: url(${(props) => props.back});
+  /* background-size: contain; */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   display: inline-block;
-  width: 100%;
+  width: 80%;
   height: 100%;
-  margin: 0 auto;
   border-radius: 10px;
 `;
+
+const StDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
 //------------------------------------>
 //UserInfo
 const UserInfoFirstWrap = styled.div`

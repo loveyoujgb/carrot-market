@@ -19,7 +19,7 @@ const ViewPageWrap = styled.div`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  width: 40%;
+  width: 67%;
   box-sizing: border-box;
   margin: 0 auto;
 `;

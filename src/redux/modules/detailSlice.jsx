@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 // import Cookies from "universal-cookie";
 
-const API_URL = process.env.REACT_APP_MODULES_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const initialState = {
   changeMode: {
@@ -17,7 +17,18 @@ const initialState = {
 
 export const __getDetail = createAsyncThunk("getDetail", async (payload, thunkAPI) => {
   try {
-    const data = await axios.get(`${API_URL}/${payload.id}`);
+    console.log(payload);
+    const data = await axios.get(`${API_URL}/article/${payload.id}`);
+    console.log(data);
+    return thunkAPI.fulfillWithValue(data.data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+export const __deleteDetail = createAsyncThunk("deleteDetail", async (payload, thunkAPI) => {
+  try {
+    const data = await axios.delete(`${API_URL}/article/auth/${payload}`);
     return thunkAPI.fulfillWithValue(data.data);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
@@ -26,10 +37,10 @@ export const __getDetail = createAsyncThunk("getDetail", async (payload, thunkAP
 
 export const __postUserHeart = createAsyncThunk("userHeartPost", async (payload, thunkAPI) => {
   try {
-    // const accessToken = cookies.get("Authorization");
+    const token = localStorage.getItem("token");
     const data = await axios.post(`${API_URL}/like/auth/${payload.id}`, {
       headers: {
-        // Authorization: accessToken,
+        Authorization: token,
       },
     });
     return thunkAPI.fulfillWithValue(data.data);
@@ -38,14 +49,19 @@ export const __postUserHeart = createAsyncThunk("userHeartPost", async (payload,
   }
 });
 
-// export const __postmodules = createAsyncThunk("modules/postModules", async (payload, thunkAPI) => {
-//   try {
-//     const data = await axios.post(`${API_TODOS}`, payload);
-//     return thunkAPI.fulfillWithValue(data.data);
-//   } catch (error) {
-//     return thunkAPI.rejectWithValue(error);
-//   }
-// });
+export const __getUserHeart = createAsyncThunk("userHeartPost", async (payload, thunkAPI) => {
+  try {
+    const token = localStorage.getItem("token");
+    const data = await axios.get(`${API_URL}/like/auth/${payload.id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    return thunkAPI.fulfillWithValue(data.data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
 
 export const detailSlice = createSlice({
   name: "detail",
@@ -75,6 +91,17 @@ export const detailSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    [__deleteDetail.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__deleteDetail.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.detail.filter((article) => article.id !== action.payload);
+    },
+    [__deleteDetail.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     [__postUserHeart.pending]: (state) => {
       state.isLoading = true;
     },
@@ -83,6 +110,17 @@ export const detailSlice = createSlice({
       state.userheart = action.payload;
     },
     [__postUserHeart.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__getUserHeart.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__getUserHeart.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.userheart = action.payload;
+    },
+    [__getUserHeart.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },

@@ -13,6 +13,7 @@ const Form = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
+  const token = localStorage.getItem("token");
   //유저가 수정버튼을 클릭했을 경우..~
   const { mode, id } = useSelector((state) => state.detail.changeMode);
   console.log(mode, id);
@@ -69,38 +70,72 @@ const Form = () => {
     </Thumb>
   ));
   useEffect(() => {
+    if (token === null) {
+      navigate("/");
+      alert("로그인을 해주세요");
+      return;
+    }
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
 
   const onClickSubmit = async () => {
-    // e.persist(); 찾아보기..이게뭐지?
     let formData = new FormData();
-    for (var i = 0; i < acceptedFiles.length; i++) {
-      let file = acceptedFiles[i];
-      formData.append("imageFiles[]", file);
-    }
-    let dataSet = {
-      title: title,
-      region: region,
-      category: category,
-      price: price,
-      content: content,
-    };
-    formData.append("textData", JSON.stringify(dataSet));
-    try {
-      await axios({
-        method: "post",
-        url: `${API_URL}/article/auth`,
-        headers: {
-          "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
-          // Authorization: token,
-        },
-        data: formData,
-      });
-      navigate("/");
-    } catch (error) {
-      console.log(error);
+    if (title === "") {
+      alert("제목을 입력해 주세요");
+    } else if (content === "") {
+      alert("내용을 입력해 주세요");
+    } else if (price === "") {
+      alert("가격을 입력해 주세요");
+    } else if (region === undefined) {
+      alert("지역을 선택해 주세요");
+    } else if (category === undefined) {
+      alert("카테고리를 선택해 주세요");
+    } else if (files.length === 0) {
+      alert("사진을 추가해 주세요.");
+    } else {
+      // formData.append("multipartFile", files[0]);
+      // formData.append("multipartFile", acceptedFiles[0].uploadFile);
+
+      // for (var i = 0; i < files.length; i++) {
+      //   formData.append("multipartFile", files[i]);
+      // }
+      files.map((file) => formData.append("multipartFile", file));
+      // formdata.append('content', new Blob([JSON.stringify(newInsta)], { type: "application/json" }))
+      let dataSet = {
+        title: title,
+        region: region,
+        category: category,
+        price: price,
+        content: content,
+      };
+      console.log(dataSet);
+      formData.append("dto", new Blob([JSON.stringify(dataSet)], { type: "application/json" }));
+      // FormData key
+      for (let key of formData.keys()) {
+        console.log(key);
+      }
+      // FormData value
+      for (let value of formData.values()) {
+        console.log(value);
+      }
+      try {
+        const token = localStorage.getItem("token");
+        console.log(token);
+        await axios({
+          method: "post",
+          url: `${API_URL}/article/auth`,
+          headers: {
+            "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+            responseType: "blob",
+            Authorization: token,
+          },
+          data: formData,
+        });
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   //수정
@@ -124,6 +159,7 @@ const Form = () => {
         url: `${API_URL}/article/auth/${id}`,
         headers: {
           "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+          Authorization: token,
         },
         data: formData,
       });
@@ -133,9 +169,6 @@ const Form = () => {
     }
   };
   //----------------------------------------------->
-
-  const { form } = useSelector((state) => state);
-
   console.log(price, region, category, title, content);
 
   const onChangeTitleHandler = (e) => {
@@ -211,18 +244,18 @@ const Form = () => {
           <div>
             <ItemImg back={back}></ItemImg>
           </div>
-          <Input onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
+          <Input maxLength={30} onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
           {/* select box */}
           <SelectBox>
             <StSelect onChange={onChangeRegionHandler} value={region}>
-              {RegionOptions.map((item, index) => (
+              {RegionOptions.map((item) => (
                 <option key={item.key} value={item.value}>
                   {item.value}
                 </option>
               ))}
             </StSelect>
             <StSelect onChange={onChangeCategoryHandler} value={category}>
-              {CategoryOptions.map((item, index) => (
+              {CategoryOptions.map((item) => (
                 <option key={item.key} value={item.value}>
                   {item.value}
                 </option>
