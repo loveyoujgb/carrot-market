@@ -2,15 +2,18 @@ import React,{useEffect, useState} from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { __readLists } from "../redux/modules/listSlice";
+import { useNavigate } from "react-router-dom";
 
 const HomeList = () => {
   const dispatch=useDispatch();
+  const navigate=useNavigate();
 
-  // useEffect(() => {
-  // dispatch(__readLists());
-  // }, [dispatch]);
+  useEffect(() => {
+  dispatch(__readLists());
+  }, [dispatch]);
 
   const {lists} = useSelector((state) => state.lists);
+  console.log(lists)
   
   const [region, setRegion]=useState("")
   const onChangeRegion=(e=>{
@@ -24,13 +27,13 @@ const HomeList = () => {
     { key: 4, value: "인천광역시" },
     { key: 5, value: "경기도" },
     { key: 6, value: "강원도" },
-    { key: 7, value: "충청북도" },
-    { key: 8, value: "충청남도" },
-    { key: 9, value: "전라북도" },
-    { key: 10, value: "전라남도" },
-    { key: 11, value: "경상북도" },
-    { key: 12, value: "경상남도" },
-    { key: 13, value: "제주특별자치도" },
+    // { key: 7, value: "충청북도" },
+    // { key: 8, value: "충청남도" },
+    // { key: 9, value: "전라북도" },
+    // { key: 10, value: "전라남도" },
+    // { key: 11, value: "경상북도" },
+    // { key: 12, value: "경상남도" },
+    // { key: 13, value: "제주특별자치도" },
   ];
 const [category,setCategory]=useState("");
 const onChangeCategory=(e)=>{
@@ -44,29 +47,31 @@ const onChangeCategory=(e)=>{
     { key: 5, value: "잡화" },
     { key: 6, value: "디지털기기" },
   ];
+
+
   return (
     <HomeListWrap>
       <HomeListTitle>중고거래 인기매물</HomeListTitle>
       <SelectBox>
-        <div className="select">
-          <select onChange={onChangeRegion} value={region}>
+        <div>
+          <StSelect onChange={onChangeRegion} value={region}>
           {regionOptions.map((region)=>(
             <option key={region.key} value={region.value}>{region.value}</option>
           ))}
-          </select>
+          </StSelect>
         </div>
-        <div className="select">
-          <select onChange={onChangeCategory} value={category}>
+        <div>
+          <StSelect onChange={onChangeCategory} value={category}>
            {categoryOptions.map((category)=>(
             <option key={category.key} value={category.value}>{category.value}</option>
            ))}
-          </select>
+          </StSelect>
         </div>
       </SelectBox>
       <ListWrap>
-        {lists.map((list)=>(
-        <BoxWrap>
-          <ImageBox src={list.img} />
+        {lists?.map((list,idx)=>(
+        <BoxWrap key={idx} onClick={()=> navigate(`/detail/${list.id}`)}>
+          <ImageBox src={list.img[0].imgUrl} />
           <ContentWrap>
             <BoxContent margin="6px 0">{list.title}</BoxContent>
             <BoxContent margin="2px 0" bold="bold">
@@ -106,13 +111,41 @@ const HomeListTitle = styled.h1`
   }
 `;
 
+
 const SelectBox = styled.div`
-  display: flex;
-  justify-content: right;
-  margin-right: 15%;
-  margin-bottom: 2%;
   gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+  display:flex;
+  justify-content:right;
+  margin-right:15%;
+  @media screen and (max-width: 556px) {
+    text-align: center;
+    display:flex;
+    flex-direction:column;
+    margin-right:0px;
+    /* justify-content:center; */
+  }
 `;
+
+const StSelect = styled.select`
+  margin: 5px 0;
+  color: #696969;
+  font-size: 15px;
+  border: 1px solid #e9e9e9;
+  padding: 10px;
+  width: 100%;
+  height: 43px;
+  border-radius: 5px;
+  :focus {
+    outline: none;
+  }
+  @media screen and (max-width: 556px) {
+   width:70%
+  }
+`;
+
+
 const ListWrap = styled.div`
   display: flex;
   justify-content: space-around;

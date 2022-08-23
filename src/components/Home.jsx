@@ -77,12 +77,14 @@ const SubTitle = styled.h2`
   margin-bottom: 32px;
   @media screen and (max-width: 556px) {
     text-align: center;
+    font-size:38px;
   }
 `;
 const ContentText = styled.p`
-  font-size: 16px;
+  font-size: 15px;
   text-align: left;
   @media screen and (max-width: 556px) {
     text-align: center;
+    font-size:15px;
   }
 `;
