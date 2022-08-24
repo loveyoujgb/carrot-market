@@ -119,9 +119,6 @@ const Title = styled.h1`
   font-weight: bold;
   font-size: 20px;
   margin: 5px 0 0 20px;
-  @media screen and (max-width: 600px) {
-    display: none;
-  }
 `;
 
 const LogoImg = styled.div`
