@@ -6,19 +6,17 @@ import { __deleteComments } from "../redux/modules/commentsSlice";
 
 const Sale = ({ comment, username }) => {
   console.log(comment);
+  const member = localStorage.getItem("username");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const DoubleClickHandler = () => {
     console.log("더블클릭!!");
-    if (username === comment.username) {
+    if (member === comment.username) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
-        alert("삭제되었습니다");
-        navigate("/detail");
-      } else {
-        alert("취소합니다");
-        navigate("/detail");
-      }
+        // alert("삭제되었습니다");
+        // navigate(`/detail/${comment.id}`);
+      } 
     } else return;
   };
   console.log(comment);
@@ -32,9 +30,7 @@ const Sale = ({ comment, username }) => {
               {comment.nickname}
             </UsernameText>
             <Message
-              onDoubleClick={() =>
-                username === comment.username ? { DoubleClickHandler } : null
-              }
+              onDoubleClick= { DoubleClickHandler } 
             >
               {comment.content}
             </Message>
