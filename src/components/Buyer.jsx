@@ -13,11 +13,11 @@ const Buy = ({ comment }) => {
     if (member === comment.username) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
-        alert("삭제되었습니다");
-        navigate("/detail");
+        // alert("삭제되었습니다");
+        // navigate("/detail");
       } else {
-        alert("취소합니다");
-        navigate("/detail");
+        // alert("취소합니다");
+        // navigate("/detail");
       }
     } else return;
   };
