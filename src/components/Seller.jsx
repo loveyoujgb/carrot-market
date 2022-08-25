@@ -7,7 +7,6 @@ const Sale = ({ comment }) => {
   const member = localStorage.getItem("username");
   const dispatch = useDispatch();
   const DoubleClickHandler = () => {
-    console.log("더블클릭!!");
     if (member === comment.username) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
