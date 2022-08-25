@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import back from "../img/back.png";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
-const Form = () => {
-  const navigate = useNavigate();
+const Edit = () => {
+  const { detail } = useSelector((state) => state.detail);
   const API_URL = process.env.REACT_APP_API_URL;
-  const token = localStorage.getItem("token");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [price, setPrice] = useState("");
-  const [region, setRegiont] = useState();
-  const [category, setCategory] = useState();
+  const param = useParams();
+  const username = localStorage.getItem("username");
+  const navigate = useNavigate();
+  const [title, setTitle] = useState(detail.title);
+  const [content, setContent] = useState(detail.content);
+  const [price, setPrice] = useState(detail.price);
+  const [region, setRegiont] = useState(detail.region);
+  const [category, setCategory] = useState(detail.category);
+  //사진업로드
   const [files, setFiles] = useState([]);
-
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
     maxSize: 1000000, //1메가
@@ -23,7 +27,6 @@ const Form = () => {
       "image/jpeg": [],
       "image/png": [],
     },
-
     onDrop: (acceptedFiles) => {
       setFiles(
         acceptedFiles.map((file) =>
@@ -58,19 +61,17 @@ const Form = () => {
       />
     </Thumb>
   ));
-
   useEffect(() => {
-    if (token === null) {
+    if (username !== detail.username) {
       navigate("/");
-      alert("로그인을 해주세요");
       return;
     }
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
 
-  const onClickSubmit = async () => {
-    let formData = new FormData();
+  //수정
+  const onClickChangeSubmit = async () => {
     if (title === "") {
       alert("제목을 입력해 주세요");
     } else if (content === "") {
@@ -81,33 +82,25 @@ const Form = () => {
       alert("지역을 선택해 주세요");
     } else if (category === undefined) {
       alert("카테고리를 선택해 주세요");
-    } else if (files.length === 0) {
-      alert("사진을 추가해 주세요.");
     } else {
-      files.map((file) => formData.append("multipartFile", file));
-
-      const dataSet = {
+      let payload = {
         title: title,
         region: region,
         category: category,
         price: price,
         content: content,
       };
-
-      formData.append("dto", new Blob([JSON.stringify(dataSet)], { type: "application/json" }));
       try {
         const token = localStorage.getItem("token");
         const data = await axios({
-          method: "post",
-          url: `${API_URL}/article/auth`,
+          method: "patch",
+          url: `${API_URL}/article/auth/${param.id}`,
           headers: {
-            "Content-Type": "multipart/form-data",
-            responseType: "blob",
             Authorization: token,
           },
-          data: formData,
+          data: payload,
         });
-        navigate(`/detail/${data.data.id}`);
+        navigate(-1);
       } catch (error) {
         return;
       }
@@ -117,7 +110,6 @@ const Form = () => {
   const onChangeTitleHandler = (e) => {
     setTitle(e.currentTarget.value);
   };
-
   const onChangeContentHandler = (e) => {
     setContent(e.currentTarget.value);
   };
@@ -131,7 +123,7 @@ const Form = () => {
   };
 
   const RegionOptions = [
-    { key: 1, value: "지역을 선택하세요", disabled: true },
+    { key: 1, value: "지역을 선택하세요" },
     { key: 2, value: "서울특별시" },
     { key: 3, value: "부산광역시" },
     { key: 4, value: "인천광역시" },
@@ -145,7 +137,7 @@ const Form = () => {
   };
 
   const CategoryOptions = [
-    { key: 1, value: "카테고리를 선택하세요", disabled: true },
+    { key: 1, value: "카테고리를 선택하세요" },
     { key: 2, value: "생활가전" },
     { key: 3, value: "생활용품" },
     { key: 4, value: "의류" },
@@ -166,27 +158,18 @@ const Form = () => {
               <MdOutlineArrowBackIos size="25" />
             </BackButton>
           </Title>
-          <Container>
-            <input {...getInputProps()} />
-            <StButton {...getRootProps()}>
-              <MdAddAPhoto size="30px" />
-              <Length>{files.length}/5</Length>
-            </StButton>
-            <ThumbsContainer>{thumbs}</ThumbsContainer>
-            <div>{fileRejectionItems}</div>
-          </Container>
           <Input maxLength="30" onChange={onChangeTitleHandler} value={title} placeholder="제목을 입력하세요"></Input>
           <SelectBox>
             <StSelect onChange={onChangeRegionHandler} value={region}>
               {RegionOptions.map((item) => (
-                <option key={item.key} disabled={item.disabled} value={item.value}>
+                <option key={item.key} value={item.value}>
                   {item.value}
                 </option>
               ))}
             </StSelect>
             <StSelect onChange={onChangeCategoryHandler} value={category}>
               {CategoryOptions.map((item) => (
-                <option key={item.key} disabled={item.disabled} value={item.value}>
+                <option key={item.key} value={item.value}>
                   {item.value}
                 </option>
               ))}
@@ -210,14 +193,14 @@ const Form = () => {
             <MdOutlineTune />
             <BottomText>보여줄 동네 설정</BottomText>
           </BottomTextWrap>
-          <AddButton onClick={onClickSubmit}>완료</AddButton>
+          <AddButton onClick={onClickChangeSubmit}>수정 완료</AddButton>
         </FirstWrap>
       </ViewItemWrap>
     </>
   );
 };
 
-export default Form;
+export default Edit;
 
 const Title = styled.div`
   display: flex;
@@ -305,10 +288,22 @@ const ViewItemWrap = styled.div`
   width: 100%;
 `;
 
+//Item Image
 const FirstWrap = styled.div`
   height: 500px;
 `;
-
+const ItemImg = styled.div`
+  background-image: url(${(props) => props.back});
+  background-size: cover;
+  background-position: center;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 10px;
+`;
+//---------------------------------------->
+//content
 const BottomTextWrap = styled.div`
   display: flex;
   flex-direction: row;
@@ -332,6 +327,8 @@ const AddButton = styled.div`
   font-weight: bold;
   color: #ff8a3d;
 `;
+
+//사진 업로드
 
 const ThumbsContainer = styled.aside`
   display: flex;

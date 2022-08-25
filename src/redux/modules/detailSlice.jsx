@@ -4,11 +4,6 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const initialState = {
-  changeMode: {
-    mode: false,
-    id: 0,
-  },
-  userheart: false,
   detail: [],
   isLoading: false,
   error: null,
@@ -16,15 +11,16 @@ const initialState = {
 
 export const __getDetail = createAsyncThunk("getDetail", async (payload, thunkAPI) => {
   try {
-    console.log(payload);
     const token = localStorage.getItem("token");
-    const data = await axios.get(`${API_URL}/article/${payload.id}`, {
+    const username = localStorage.getItem("username");
+    const data = await axios.get(`${API_URL}/article/${payload}`, {
       headers: {
         Authorization: token,
       },
     });
-    console.log(data);
-    return thunkAPI.fulfillWithValue(data.data);
+    if (username === data.data.username) {
+      return thunkAPI.fulfillWithValue({ ...data.data, isSeller: true });
+    } else return thunkAPI.fulfillWithValue(data.data);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -33,8 +29,7 @@ export const __getDetail = createAsyncThunk("getDetail", async (payload, thunkAP
 export const __deleteDetail = createAsyncThunk("deleteDetail", async (payload, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
-    console.log(payload);
-    const data = await axios.delete(`${API_URL}/article/auth/${payload}`, {
+    await axios.delete(`${API_URL}/article/auth/${payload}`, {
       headers: {
         Authorization: token,
       },
@@ -47,14 +42,12 @@ export const __deleteDetail = createAsyncThunk("deleteDetail", async (payload, t
 export const __postUserHeart = createAsyncThunk("userHeartPost", async (payload, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
-    console.log(payload.id);
-    const data = await axios.post(`${API_URL}/like/auth/${payload.id}`, "", {
+    const data = await axios.post(`${API_URL}/like/auth/${payload}`, "", {
       headers: {
         Authorization: token,
       },
     });
     thunkAPI.dispatch(__getDetail(payload));
-    console.log(data.data);
     return thunkAPI.fulfillWithValue(data.data);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
@@ -65,9 +58,8 @@ export const detailSlice = createSlice({
   name: "detail",
   initialState,
   reducers: {
-    changeMode: (state, action) => {
-      console.log(action);
-      state.changeMode = action.payload;
+    cleartDetail: (state) => {
+      state.detail = [];
     },
   },
   extraReducers: {
@@ -106,5 +98,5 @@ export const detailSlice = createSlice({
   },
 });
 
-export const { changeMode } = detailSlice.actions;
+export const { cleartDetail } = detailSlice.actions;
 export default detailSlice.reducer;

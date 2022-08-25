@@ -1,18 +1,18 @@
 import React from "react";
-import Form from "../components/Form";
+import Edit from "../components/Edit";
 import Layout from "../components/Layout";
 import styled from "styled-components";
 
-const FormPage = () => {
+const EditPage = () => {
   return (
     <Layout>
       <Wrap>
-        <Form />
+        <Edit />
       </Wrap>
     </Layout>
   );
 };
-export default FormPage;
+export default EditPage;
 const Wrap = styled.div`
   display: flex;
   justify-content: space-around;

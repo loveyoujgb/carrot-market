@@ -4,9 +4,9 @@ import logo from "../img/logo.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModals/LoginModal.jsx";
 import KakaoImg from "../img/KakaoImg.png";
-import { IsLogin, Logout } from "../shared/isLogin";
+import { Logout } from "../shared/isLogin";
 
-const Header = (props) => {
+const Header = () => {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT}&response_type=code`;
   const navigate = useNavigate();
   const [token, setToken] = useState(false);
@@ -17,6 +17,7 @@ const Header = (props) => {
   }, [token]);
 
   const [modalOpen, setModalOpen] = useState(false);
+
   const openModal = () => {
     setModalOpen(true);
   };
@@ -30,8 +31,8 @@ const Header = (props) => {
 
   const onClickDelete = () => {
     Logout();
+    navigate("/");
     setToken(null);
-    navigate("/")
   };
 
   return (
@@ -91,8 +92,11 @@ const Container = styled.div`
   width: 75%;
   background-color: #fff;
   margin: 0 auto 5px auto;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 556px) {
     width: 100%;
+  }
+  @media (min-width: 556px) and (max-width: 800px) {
+    width: 85%;
   }
 `;
 
@@ -119,9 +123,6 @@ const Title = styled.h1`
   font-weight: bold;
   font-size: 20px;
   margin: 5px 0 0 20px;
-  @media screen and (max-width: 600px) {
-    display: none;
-  }
 `;
 
 const LogoImg = styled.div`
