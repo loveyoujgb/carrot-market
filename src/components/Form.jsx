@@ -136,7 +136,7 @@ const Form = () => {
   };
 
   const RegionOptions = [
-    { key: 1, value: "지역을 선택하세요", disabled: true },
+    { key: 1, value: "" },
     { key: 2, value: "서울특별시" },
     { key: 3, value: "부산광역시" },
     { key: 4, value: "인천광역시" },
@@ -150,7 +150,7 @@ const Form = () => {
   };
 
   const CategoryOptions = [
-    { key: 1, value: "카테고리를 선택하세요", disabled: true },
+    { key: 1, value: "" },
     { key: 2, value: "생활가전" },
     { key: 3, value: "생활용품" },
     { key: 4, value: "의류" },
@@ -184,15 +184,15 @@ const Form = () => {
           <SelectBox>
             <StSelect onChange={onChangeRegionHandler} value={region}>
               {RegionOptions.map((item) => (
-                <option key={item.key} disabled={item.disabled} value={item.value}>
-                  {item.value}
+                <option key={item.key} value={item.value}>
+                  {item.value === "" ? "지역을 선택해 주세요!" : item.value}
                 </option>
               ))}
             </StSelect>
             <StSelect onChange={onChangeCategoryHandler} value={category}>
               {CategoryOptions.map((item) => (
-                <option key={item.key} disabled={item.disabled} value={item.value}>
-                  {item.value}
+                <option key={item.key} value={item.value}>
+                  {item.value === "" ? "카테고리를 선택해 주세요" : item.value}
                 </option>
               ))}
             </StSelect>
