@@ -26,6 +26,7 @@ const Detail = () => {
   const param = useParams();
   const { detail, isLoading, error } = useSelector((state) => state.detail);
   const price = +detail.price;
+  
   useEffect(() => {
     dispatch(__getDetail(param.id));
     return () => {
@@ -49,6 +50,7 @@ const Detail = () => {
       return;
     }
   };
+
   const onClickEdit = () => {
     navigate(`/edit/${param.id}`);
   };
@@ -170,21 +172,6 @@ const ViewItemWrap = styled.div`
   width: 100%;
 `;
 
-const StSelect = styled.select`
-  margin: 5px 0;
-  color: #696969;
-  font-size: 15px;
-  border: 1px solid #e9e9e9;
-  padding: 10px;
-  width: 50px;
-  height: 43px;
-  border-radius: 5px;
-  :focus {
-    outline: none;
-  }
-`;
-
-//Item Image
 const FirstWrap = styled.div`
   height: 470px;
   width: 100%;
@@ -222,6 +209,7 @@ const FirstWrap = styled.div`
     background-color: #8f8f8f;
   }
 `;
+
 const ItemImg = styled.div`
   background-image: url(${(props) => props.back});
   background-size: cover;
@@ -242,8 +230,6 @@ const StDiv = styled.div`
   height: 100%;
 `;
 
-//------------------------------------>
-//UserInfo
 const UserInfoFirstWrap = styled.div`
   display: flex;
   align-items: center;
@@ -251,7 +237,6 @@ const UserInfoFirstWrap = styled.div`
   border-bottom: 1px solid #e9ecef;
 `;
 
-const SecondWrap = styled.div``;
 const UserInfoWrap = styled.div`
   width: 100%;
   height: 100px;
@@ -278,6 +263,7 @@ const UerInpo = styled.div`
   margin: 0;
   padding: 0;
 `;
+
 const UserInfoImg = styled.div`
   background-image: url("https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-0443429487fdc2277fc8f9dd1eca6fb8b678862f593e21222ba9f6592b99ad14.png");
   width: 40px;
@@ -286,12 +272,14 @@ const UserInfoImg = styled.div`
   background-size: cover;
   border-radius: 50%;
 `;
+
 const UserRegion = styled.div`
   font-size: 13px;
   line-height: 1.46;
   letter-spacing: -0.6px;
   color: #212529;
 `;
+
 const Username = styled.div`
   font-size: 15px;
   font-weight: 600;
@@ -299,8 +287,7 @@ const Username = styled.div`
   letter-spacing: -0.6px;
   color: #212529;
 `;
-//---------------------------------------->
-//content
+
 const ContentWrap = styled.div`
   box-sizing: border-box;
   padding: 25px 0;
@@ -321,12 +308,10 @@ const ModalButton = styled.div`
 const ButtonInModalWrap = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   align-items: center;
 `;
 
 const ButtonInModal = styled.button`
-  /* font-weight: bold; */
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -343,6 +328,7 @@ const ContentTitle = styled.div`
   line-height: 1.5;
   letter-spacing: -0.6px;
 `;
+
 const ContentCategory = styled.div`
   margin-top: 4px;
   font-size: 13px;
@@ -350,6 +336,7 @@ const ContentCategory = styled.div`
   letter-spacing: -0.6px;
   color: #868e96;
 `;
+
 const ContentPrice = styled.div`
   margin-top: 4px;
   font-size: 17px;
@@ -357,6 +344,7 @@ const ContentPrice = styled.div`
   line-height: 1.76;
   letter-spacing: -0.6px;
 `;
+
 const ContentContent = styled.div`
   font-size: 17px;
   line-height: 1.6;

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import detail from "../modules/detailSlice";
-import comments from "../modules/commentsSlice"
-import lists from "../modules/listSlice"
+import comments from "../modules/commentsSlice";
+import lists from "../modules/listSlice";
 
 export const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
@@ -11,5 +11,3 @@ export const store = configureStore({
     lists,
   },
 });
-
-// export default store;
