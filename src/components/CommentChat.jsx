@@ -16,7 +16,7 @@ const CommentChat = () => {
     return () => dispatch(clearComments());
   }, [dispatch]);
   const { comments } = useSelector((state) => state.comments);
-  const id = useSelector((state) => state.detail.detail.id);
+  const id = useSelector((state) => state.detail.detail.userId);
 
   return (
     <>
