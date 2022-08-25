@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import manner from "../img/manner.png";
-import back from "../img/back.png";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
@@ -10,8 +8,8 @@ import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import detailSlice, { changeMode, __deleteDetail, __getDetail, __getUserHeart, __postUserHeart } from "../redux/modules/detailSlice";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { cleartDetail, __deleteDetail, __getDetail, __getUserHeart, __postUserHeart } from "../redux/modules/detailSlice";
+import { Navigation, Pagination, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -22,22 +20,18 @@ const Detail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
-  const nickname = localStorage.getItem("nickname");
+  const username = localStorage.getItem("username");
   const token = localStorage.getItem("token");
-  const [userCheck, setUserCheck] = useState(false);
   const [like, setLike] = useState(false);
   const param = useParams();
   const { detail, isLoading, error } = useSelector((state) => state.detail);
-  const string = +detail.price;
-
+  const price = +detail.price;
   useEffect(() => {
-    dispatch(__getDetail({ id: param.id }));
-    if (nickname === detail.nickname) {
-      setUserCheck(true);
-    } else {
-      return;
-    }
-  }, [detail.nickname, detail.heartCnt, detail.commentCnt]);
+    dispatch(__getDetail(param.id));
+    return () => {
+      dispatch(cleartDetail());
+    };
+  }, [dispatch, username]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -50,20 +44,18 @@ const Detail = () => {
   const onClickDelete = () => {
     if (window.confirm("삭제하시겠습니까?")) {
       dispatch(__deleteDetail(param.id));
-      alert("삭제되었습니다");
       navigate("/");
     } else {
       return;
     }
   };
   const onClickEdit = () => {
-    dispatch(changeMode({ mode: true, id: param.id }));
-    navigate("/form");
+    navigate(`/edit/${param.id}`);
   };
 
   const onClickHeart = () => {
     if (token) {
-      dispatch(__postUserHeart({ id: param.id }));
+      dispatch(__postUserHeart(param.id));
       setLike(!like);
     } else {
       return;
@@ -84,7 +76,7 @@ const Detail = () => {
               <CgHome style={{ marginLeft: "10px" }} size="25" />
             </BackButton>
           </BackButtonWrap>
-          {userCheck ? (
+          {detail.isSeller ? (
             <ModalButton onClick={openModal}>
               <BiDotsVerticalRounded style={{ marginTop: "12px", cursor: "pointer" }} size="25" />
             </ModalButton>
@@ -134,7 +126,7 @@ const Detail = () => {
           <ContentCategory>
             {detail.category} · {detail.createAt}
           </ContentCategory>
-          <ContentPrice>{string.toLocaleString()}원</ContentPrice>
+          <ContentPrice>{price.toLocaleString()}원</ContentPrice>
           <ContentContent>{detail.content}</ContentContent>
           <LikeWrap>
             {detail.like ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
@@ -205,12 +197,17 @@ const FirstWrap = styled.div`
   @media screen and (max-width: 556px) {
     height: 300px;
   }
-
+  @media (min-width: 556px) and (max-width: 800px) {
+    height: 400px;
+  }
   .swiper {
     height: 100%;
     width: 100%;
     @media screen and (max-width: 556px) {
       height: 300px;
+    }
+    @media (min-width: 556px) and (max-width: 800px) {
+      height: 400px;
     }
   }
   .swiper-button-next::after {
