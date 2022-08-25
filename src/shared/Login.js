@@ -13,7 +13,6 @@ function Login() {
         const token = res.headers.authorization;
         const username = res.data.username;
         const nickname = res.data.nickname;
-        console.log(res);
         localStorage.clear();
         localStorage.setItem("token", token);
         localStorage.setItem("username", username);
@@ -22,7 +21,6 @@ function Login() {
         navigate("/");
       })
       .catch((err) => {
-        console.log("로그인에러", err);
         window.alert("로그인에 실패하였습니다");
         navigate("/");
       });

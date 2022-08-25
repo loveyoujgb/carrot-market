@@ -16,7 +16,8 @@ const ConmmentInput = () => {
   const onChangeHandler = (e) => {
     setInput(e.target.value);
   };
-  const onClickHandler = () => {
+  const onClickHandler = (e) => {
+    e.preventDefault();
     if (input===""){return alert("입력해주세요!")}
     dispatch(__postComments({ content: input,id:id }));
     setInput("")

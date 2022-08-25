@@ -14,7 +14,6 @@ const HomeList = () => {
   }, [dispatch]);
 
   const lists = useSelector((state) => state.lists.lists);
-  console.log(lists);
 
   //지역조회
   const [region, setRegion] = useState("");
@@ -45,7 +44,7 @@ const HomeList = () => {
     setCategory(e.target.value);
     return dispatch(__readLists({ category: e.target.value, region: region }));
   };
-  console.log(category);
+
   const categoryOptions = [
     { key: 1, value: "" },
     { key: 2, value: "생활가전" },
@@ -92,8 +91,8 @@ const HomeList = () => {
                   {price.toLocaleString()}원
                 </BoxContent>
                 <BoxContent size="0.8rem">
-                  {list.region}
-                  {list.category}
+                  <span>{list.region}</span> -
+                  <span>{list.category}</span>
                 </BoxContent>
                 <BoxContent size="0.8rem">
                   <span>관심 {list.heartCnt}</span>∙
