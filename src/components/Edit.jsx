@@ -38,7 +38,11 @@ const Edit = () => {
       alert("가격을 입력해 주세요");
     } else if (region === undefined) {
       alert("지역을 선택해 주세요");
+    } else if (region === "") {
+      alert("지역을 선택해 주세요");
     } else if (category === undefined) {
+      alert("카테고리를 선택해 주세요");
+    } else if (category === "") {
       alert("카테고리를 선택해 주세요");
     } else {
       let payload = {

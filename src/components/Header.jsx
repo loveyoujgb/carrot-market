@@ -89,7 +89,7 @@ export default Header;
 
 const Container = styled.div`
   height: 50px;
-  width: 75%;
+  width: 80%;
   background-color: #fff;
   margin: 0 auto 5px auto;
   @media screen and (max-width: 556px) {

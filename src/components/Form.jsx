@@ -73,7 +73,7 @@ const Form = () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview));
     };
   }, []);
-
+  console.log(region, category);
   const onClickSubmit = async () => {
     let formData = new FormData();
     if (title === "") {
@@ -84,7 +84,11 @@ const Form = () => {
       alert("가격을 입력해 주세요");
     } else if (region === undefined) {
       alert("지역을 선택해 주세요");
+    } else if (region === "") {
+      alert("지역을 선택해 주세요");
     } else if (category === undefined) {
+      alert("카테고리를 선택해 주세요");
+    } else if (category === "") {
       alert("카테고리를 선택해 주세요");
     } else if (files.length === 0) {
       alert("사진을 추가해 주세요.");
@@ -185,7 +189,7 @@ const Form = () => {
             <StSelect onChange={onChangeRegionHandler} value={region}>
               {RegionOptions.map((item) => (
                 <option key={item.key} value={item.value}>
-                  {item.value === "" ? "지역을 선택해 주세요!" : item.value}
+                  {item.value === "" ? "지역을 선택해 주세요" : item.value}
                 </option>
               ))}
             </StSelect>
