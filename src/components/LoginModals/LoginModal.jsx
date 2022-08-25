@@ -3,7 +3,6 @@ import "./LoginModal.css";
 
 const LoginModal = (props) => {
   const { open, close } = props;
-  console.log(props);
 
   return (
     <div className={open ? "openModal modal" : "modal"}>

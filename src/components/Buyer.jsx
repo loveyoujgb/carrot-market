@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useDispatch} from "react-redux";
 import styled from "styled-components";
 import { __deleteComments } from "../redux/modules/commentsSlice";
 
 const Buy = ({ comment }) => {
-  console.log(comment);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const DoubleClickHandler = () => {
@@ -22,8 +19,7 @@ const Buy = ({ comment }) => {
     } else return;
   };
   const member = localStorage.getItem("username");
-  console.log(member);
-  console.log(comment.username);
+  
   return (
     <div>
       <SecondMessageWrap>
