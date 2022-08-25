@@ -13,13 +13,13 @@ const initialState = {
 export const __getDetail = createAsyncThunk("getDetail", async (payload, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
+    const id = localStorage.getItem("id");
     const data = await axios.get(`${API_URL}/article/${payload}`, {
       headers: {
         Authorization: token,
       },
     });
-    if (username === data.data.username) {
+    if (+id === data.data.userId) {
       return thunkAPI.fulfillWithValue({ ...data.data, isSeller: true });
     } else return thunkAPI.fulfillWithValue(data.data);
   } catch (error) {

@@ -7,21 +7,16 @@ const initialState = {
   error: null,
 };
 
-export const __readLists = createAsyncThunk(
-  "getLists",
-  async (payload, thunkAPI) => {
-    try {
-      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article`, {
-        params: payload,
-      });
-      return thunkAPI.fulfillWithValue(data.data.content);
-    } catch (error) {
-      return thunkAPI.rejected(error);
-    }
+export const __readLists = createAsyncThunk("getLists", async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(`${process.env.REACT_APP_API_URL}/article`, {
+      params: payload,
+    });
+    return thunkAPI.fulfillWithValue(data.data.content);
+  } catch (error) {
+    return thunkAPI.rejected(error);
   }
-);
-
-
+});
 
 export const listsSlice = createSlice({
   name: "lists",

@@ -5,11 +5,12 @@ import { __deleteComments } from "../redux/modules/commentsSlice";
 
 const Buy = ({ comment }) => {
   const dispatch = useDispatch();
+  const member = localStorage.getItem("id");
 
   const DoubleClickHandler = () => {
-    if (member === comment.id) {
+    if (+member === +comment.userId) {
       if (window.confirm("정말 삭제합니까?")) {
-        dispatch(__deleteComments(comment.id));
+        dispatch(__deleteComments(comment.userId));
         // alert("삭제되었습니다");
         // navigate("/detail");
       } else {
@@ -18,7 +19,6 @@ const Buy = ({ comment }) => {
       }
     } else return;
   };
-  const member = localStorage.getItem("id");
 
   return (
     <div>

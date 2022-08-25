@@ -20,7 +20,7 @@ const Edit = () => {
   const [category, setCategory] = useState(detail.category);
 
   useEffect(() => {
-    if (id !== detail.id) {
+    if (+id !== +detail.userId) {
       navigate("/");
       return;
     }
@@ -125,7 +125,7 @@ const Edit = () => {
             <StSelect onChange={onChangeRegionHandler} value={region}>
               {RegionOptions.map((item) => (
                 <option key={item.key} value={item.value}>
-                  {item.value === "" ? "지역을 선택해 주세요!" : item.value}
+                  {item.value === "" ? "지역을 선택해 주세요" : item.value}
                 </option>
               ))}
             </StSelect>

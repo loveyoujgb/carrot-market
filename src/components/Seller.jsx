@@ -7,9 +7,9 @@ const Sale = ({ comment }) => {
   const member = localStorage.getItem("id");
   const dispatch = useDispatch();
   const DoubleClickHandler = () => {
-    if (member === comment.id) {
+    if (+member === +comment.userId) {
       if (window.confirm("정말 삭제합니까?")) {
-        dispatch(__deleteComments(comment.id));
+        dispatch(__deleteComments(comment.userId));
         // alert("삭제되었습니다");
         // navigate(`/detail/${comment.id}`);
       }
