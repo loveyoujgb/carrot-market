@@ -11,7 +11,7 @@ const Edit = () => {
   const dispatch = useDispatch();
   const API_URL = process.env.REACT_APP_API_URL;
   const param = useParams();
-  const username = localStorage.getItem("username");
+  const id = localStorage.getItem("id");
   const navigate = useNavigate();
   const [title, setTitle] = useState(detail.title);
   const [content, setContent] = useState(detail.content);
@@ -20,7 +20,7 @@ const Edit = () => {
   const [category, setCategory] = useState(detail.category);
 
   useEffect(() => {
-    if (username !== detail.username) {
+    if (id !== detail.id) {
       navigate("/");
       return;
     }

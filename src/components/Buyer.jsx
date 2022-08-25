@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { __deleteComments } from "../redux/modules/commentsSlice";
 
@@ -7,7 +7,7 @@ const Buy = ({ comment }) => {
   const dispatch = useDispatch();
 
   const DoubleClickHandler = () => {
-    if (member === comment.username) {
+    if (member === comment.id) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
         // alert("삭제되었습니다");
@@ -18,19 +18,15 @@ const Buy = ({ comment }) => {
       }
     } else return;
   };
-  const member = localStorage.getItem("username");
-  
+  const member = localStorage.getItem("id");
+
   return (
     <div>
       <SecondMessageWrap>
         <UserInfoImg />
         <FirstSellerMessageWrap>
-          <UsernameText style={{ margin: "0 10px" }}>
-            {comment.nickname}
-          </UsernameText>
-          <SellerMessage onDoubleClick={DoubleClickHandler}>
-            {comment.content}
-          </SellerMessage>
+          <UsernameText style={{ margin: "0 10px" }}>{comment.nickname}</UsernameText>
+          <SellerMessage onDoubleClick={DoubleClickHandler}>{comment.content}</SellerMessage>
         </FirstSellerMessageWrap>
         <SellerTime>{comment.creatAt}</SellerTime>
       </SecondMessageWrap>

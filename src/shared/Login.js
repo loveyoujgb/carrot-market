@@ -11,11 +11,11 @@ function Login() {
       .get(`${process.env.REACT_APP_SERVER_API}?code=${code}`)
       .then((res) => {
         const token = res.headers.authorization;
-        const username = res.data.username;
+        const id = res.data.id;
         const nickname = res.data.nickname;
         localStorage.clear();
         localStorage.setItem("token", token);
-        localStorage.setItem("username", username);
+        localStorage.setItem("id", id);
         localStorage.setItem("nickname", nickname);
         alert("로그인 완료!");
         navigate("/");

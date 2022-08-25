@@ -73,7 +73,7 @@ const Form = () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview));
     };
   }, []);
-  console.log(region, category);
+
   const onClickSubmit = async () => {
     let formData = new FormData();
     if (title === "") {

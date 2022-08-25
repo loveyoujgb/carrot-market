@@ -20,7 +20,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
-  const username = localStorage.getItem("username");
+  const id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
   const [like, setLike] = useState(false);
   const param = useParams();
@@ -32,7 +32,7 @@ const Detail = () => {
     return () => {
       dispatch(cleartDetail());
     };
-  }, [dispatch, username]);
+  }, [dispatch, id]);
 
   const openModal = () => {
     setModalOpen(true);

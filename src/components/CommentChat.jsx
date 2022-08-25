@@ -13,19 +13,19 @@ const CommentChat = () => {
 
   useEffect(() => {
     dispatch(__readComments(detailId));
-    return()=>dispatch(clearComments())
+    return () => dispatch(clearComments());
   }, [dispatch]);
   const { comments } = useSelector((state) => state.comments);
-  const username = useSelector((state) => state.detail.detail.username);
+  const id = useSelector((state) => state.detail.detail.id);
 
   return (
     <>
       <CommentChatWrqp>
         {comments.map((comment, index) => {
-          if (comment.username !== username) {
-            return <Buyer key={index} comment={comment} username={username} />;
+          if (comment.id !== id) {
+            return <Buyer key={index} comment={comment} id={id} />;
           } else {
-            return <Seller key={index} comment={comment} username={username} />;
+            return <Seller key={index} comment={comment} id={id} />;
           }
         })}
       </CommentChatWrqp>

@@ -8,9 +8,9 @@ import { useState } from "react";
 
 const ConmmentInput = () => {
   const dispatch = useDispatch();
-  const param=useParams()
-  const id=parseInt(param.id)
-  const token = localStorage.getItem("token")
+  const param = useParams();
+  const id = parseInt(param.id);
+  const token = localStorage.getItem("token");
 
   const [input, setInput] = useState("");
   const onChangeHandler = (e) => {
@@ -18,22 +18,29 @@ const ConmmentInput = () => {
   };
   const onClickHandler = (e) => {
     e.preventDefault();
-    if (input===""){return alert("입력해주세요!")}
-    dispatch(__postComments({ content: input,id:id }));
-    setInput("")
+    if (input === "") {
+      return alert("입력해주세요!");
+    }
+    dispatch(__postComments({ content: input, id: id }));
+    setInput("");
   };
 
   return (
     <CommentWrap>
-        <form onSubmit={onClickHandler}  >
-      <InputWrap>
-        <BsPlusLg style={{ marginRight: "10px" }} size="30" color="#c4c4c4eb" />
+      <form onSubmit={onClickHandler}>
+        <InputWrap>
+          <BsPlusLg style={{ marginRight: "10px" }} size="30" color="#c4c4c4eb" />
           <Input
-          disabled={!token?true:false}
-          value={input} type="text" onChange={onChangeHandler} LenmaxLength="30" placeholder="30자 이하로 입력해주세요" />
-          <ButtonImg  disabled={!token?true:false}  chatting={chatting} />
-      </InputWrap>
-        </form>
+            disabled={!token ? true : false}
+            value={input}
+            type="text"
+            onChange={onChangeHandler}
+            LenmaxLength="30"
+            placeholder="30자 이하로 입력해주세요"
+          />
+          <ButtonImg disabled={!token ? true : false} chatting={chatting} />
+        </InputWrap>
+      </form>
     </CommentWrap>
   );
 };
@@ -69,7 +76,7 @@ const ButtonImg = styled.button`
   background-position: center;
   margin: 0;
   overflow: hidden;
-  border:none;
+  border: none;
 `;
 
 const InputWrap = styled.div`
