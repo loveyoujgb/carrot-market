@@ -22,7 +22,7 @@ const CommentChat = () => {
     <>
       <CommentChatWrqp>
         {comments.map((comment, index) => {
-          if (comment.id !== id) {
+          if (comment.userId !== id) {
             return <Buyer key={index} comment={comment} id={id} />;
           } else {
             return <Seller key={index} comment={comment} id={id} />;
