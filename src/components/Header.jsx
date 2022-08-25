@@ -4,7 +4,7 @@ import logo from "../img/logo.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModals/LoginModal.jsx";
 import KakaoImg from "../img/KakaoImg.png";
-import { IsLogin, Logout } from "../shared/isLogin";
+import { Logout } from "../shared/isLogin";
 
 const Header = (props) => {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT}&response_type=code`;
