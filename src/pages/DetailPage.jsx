@@ -26,4 +26,7 @@ const ViewPageWrap = styled.div`
   @media screen and (max-width: 556px) {
     width: 93%;
   }
+  @media (min-width: 556px) and (max-width: 800px) {
+    width: 85%;
+  }
 `;

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import manner from "../img/manner.png";
-import back from "../img/back.png";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
@@ -10,8 +8,8 @@ import { CgHome } from "react-icons/cg";
 import Modal from "./Modals/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import detailSlice, { changeMode, __deleteDetail, __getDetail, __getUserHeart, __postUserHeart } from "../redux/modules/detailSlice";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { cleartDetail, __deleteDetail, __getDetail, __getUserHeart, __postUserHeart } from "../redux/modules/detailSlice";
+import { Navigation, Pagination, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -22,22 +20,19 @@ const Detail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
-  const nickname = localStorage.getItem("nickname");
+  const username = localStorage.getItem("username");
   const token = localStorage.getItem("token");
-  const [userCheck, setUserCheck] = useState(false);
   const [like, setLike] = useState(false);
   const param = useParams();
   const { detail, isLoading, error } = useSelector((state) => state.detail);
-  const string = +detail.price;
+  const price = +detail.price;
 
   useEffect(() => {
-    dispatch(__getDetail({ id: param.id }));
-    if (nickname === detail.nickname) {
-      setUserCheck(true);
-    } else {
-      return;
-    }
-  }, [detail.nickname, detail.heartCnt, detail.commentCnt]);
+    dispatch(__getDetail(param.id));
+    return () => {
+      dispatch(cleartDetail());
+    };
+  }, [dispatch, username]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -50,20 +45,19 @@ const Detail = () => {
   const onClickDelete = () => {
     if (window.confirm("삭제하시겠습니까?")) {
       dispatch(__deleteDetail(param.id));
-      alert("삭제되었습니다");
       navigate("/");
     } else {
       return;
     }
   };
+
   const onClickEdit = () => {
-    dispatch(changeMode({ mode: true, id: param.id }));
-    navigate("/form");
+    navigate(`/edit/${param.id}`);
   };
 
   const onClickHeart = () => {
     if (token) {
-      dispatch(__postUserHeart({ id: param.id }));
+      dispatch(__postUserHeart(param.id));
       setLike(!like);
     } else {
       return;
@@ -84,7 +78,7 @@ const Detail = () => {
               <CgHome style={{ marginLeft: "10px" }} size="25" />
             </BackButton>
           </BackButtonWrap>
-          {userCheck ? (
+          {detail.isSeller ? (
             <ModalButton onClick={openModal}>
               <BiDotsVerticalRounded style={{ marginTop: "12px", cursor: "pointer" }} size="25" />
             </ModalButton>
@@ -134,7 +128,7 @@ const Detail = () => {
           <ContentCategory>
             {detail.category} · {detail.createAt}
           </ContentCategory>
-          <ContentPrice>{string.toLocaleString()}원</ContentPrice>
+          <ContentPrice>{price.toLocaleString()}원</ContentPrice>
           <ContentContent>{detail.content}</ContentContent>
           <LikeWrap>
             {detail.like ? <IoMdHeart color="#ff7518" onClick={onClickHeart} size="25" /> : <IoMdHeartEmpty onClick={onClickHeart} size="25" />}
@@ -178,21 +172,6 @@ const ViewItemWrap = styled.div`
   width: 100%;
 `;
 
-const StSelect = styled.select`
-  margin: 5px 0;
-  color: #696969;
-  font-size: 15px;
-  border: 1px solid #e9e9e9;
-  padding: 10px;
-  width: 50px;
-  height: 43px;
-  border-radius: 5px;
-  :focus {
-    outline: none;
-  }
-`;
-
-//Item Image
 const FirstWrap = styled.div`
   height: 470px;
   width: 100%;
@@ -205,12 +184,17 @@ const FirstWrap = styled.div`
   @media screen and (max-width: 556px) {
     height: 300px;
   }
-
+  @media (min-width: 556px) and (max-width: 800px) {
+    height: 400px;
+  }
   .swiper {
     height: 100%;
     width: 100%;
     @media screen and (max-width: 556px) {
       height: 300px;
+    }
+    @media (min-width: 556px) and (max-width: 800px) {
+      height: 400px;
     }
   }
   .swiper-button-next::after {
@@ -225,6 +209,7 @@ const FirstWrap = styled.div`
     background-color: #8f8f8f;
   }
 `;
+
 const ItemImg = styled.div`
   background-image: url(${(props) => props.back});
   background-size: cover;
@@ -245,8 +230,6 @@ const StDiv = styled.div`
   height: 100%;
 `;
 
-//------------------------------------>
-//UserInfo
 const UserInfoFirstWrap = styled.div`
   display: flex;
   align-items: center;
@@ -254,7 +237,6 @@ const UserInfoFirstWrap = styled.div`
   border-bottom: 1px solid #e9ecef;
 `;
 
-const SecondWrap = styled.div``;
 const UserInfoWrap = styled.div`
   width: 100%;
   height: 100px;
@@ -281,6 +263,7 @@ const UerInpo = styled.div`
   margin: 0;
   padding: 0;
 `;
+
 const UserInfoImg = styled.div`
   background-image: url("https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-0443429487fdc2277fc8f9dd1eca6fb8b678862f593e21222ba9f6592b99ad14.png");
   width: 40px;
@@ -289,12 +272,14 @@ const UserInfoImg = styled.div`
   background-size: cover;
   border-radius: 50%;
 `;
+
 const UserRegion = styled.div`
   font-size: 13px;
   line-height: 1.46;
   letter-spacing: -0.6px;
   color: #212529;
 `;
+
 const Username = styled.div`
   font-size: 15px;
   font-weight: 600;
@@ -302,8 +287,7 @@ const Username = styled.div`
   letter-spacing: -0.6px;
   color: #212529;
 `;
-//---------------------------------------->
-//content
+
 const ContentWrap = styled.div`
   box-sizing: border-box;
   padding: 25px 0;
@@ -324,12 +308,10 @@ const ModalButton = styled.div`
 const ButtonInModalWrap = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   align-items: center;
 `;
 
 const ButtonInModal = styled.button`
-  /* font-weight: bold; */
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -346,6 +328,7 @@ const ContentTitle = styled.div`
   line-height: 1.5;
   letter-spacing: -0.6px;
 `;
+
 const ContentCategory = styled.div`
   margin-top: 4px;
   font-size: 13px;
@@ -353,6 +336,7 @@ const ContentCategory = styled.div`
   letter-spacing: -0.6px;
   color: #868e96;
 `;
+
 const ContentPrice = styled.div`
   margin-top: 4px;
   font-size: 17px;
@@ -360,6 +344,7 @@ const ContentPrice = styled.div`
   line-height: 1.76;
   letter-spacing: -0.6px;
 `;
+
 const ContentContent = styled.div`
   font-size: 17px;
   line-height: 1.6;

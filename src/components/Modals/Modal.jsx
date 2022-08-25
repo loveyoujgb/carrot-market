@@ -3,7 +3,6 @@ import "./Modal.css";
 
 const Modal = (props) => {
   const { open, close } = props;
-  console.log(props);
 
   return (
     <div className={open ? "openModal modalstyle" : "modalstyle"}>
