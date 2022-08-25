@@ -26,7 +26,7 @@ const Detail = () => {
   const param = useParams();
   const { detail, isLoading, error } = useSelector((state) => state.detail);
   const price = +detail.price;
-  
+
   useEffect(() => {
     dispatch(__getDetail(param.id));
     return () => {
@@ -93,15 +93,7 @@ const Detail = () => {
           </Modal>
         </DetailFirstWrap>
         <FirstWrap>
-          <Swiper
-            modules={[Navigation, Pagination, Scrollbar]}
-            spaceBetween={50}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
-          >
+          <Swiper modules={[Navigation, Pagination, Scrollbar]} spaceBetween={50} slidesPerView={1} navigation pagination={{ clickable: true }}>
             {detail.img?.map((photo, index) => (
               <SwiperSlide key={index}>
                 <StDiv>

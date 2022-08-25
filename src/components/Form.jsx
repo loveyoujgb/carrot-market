@@ -321,6 +321,9 @@ const BottomText = styled.div`
   margin: 15px 10px 15px 5px;
   font-size: 16px;
   font-weight: bold;
+  @media screen and (max-width: 556px) {
+    font-size: 13px;
+  }
 `;
 
 const AddButton = styled.div`

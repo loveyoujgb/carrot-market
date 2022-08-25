@@ -96,7 +96,7 @@ const Container = styled.div`
     width: 100%;
   }
   @media (min-width: 556px) and (max-width: 800px) {
-    width: 85%;
+    width: 90%;
   }
 `;
 
@@ -122,20 +122,24 @@ const Title = styled.h1`
   color: #ff7518;
   font-weight: bold;
   font-size: 20px;
-  margin: 5px 0 0 20px;
+  margin: 5px 5px 0 5px;
+  @media screen and (max-width: 556px) {
+    font-size: 15px;
+  }
 `;
 
 const LogoImg = styled.div`
   cursor: pointer;
   background-image: url(${(props) => props.logo});
   display: inline-block;
-  width: 100px;
+  width: 130px;
   height: 50px;
   background-size: 100px;
   background-repeat: no-repeat;
   background-position: center;
   margin: 0;
   overflow: hidden;
+  margin: 5px 5px 0 0;
 `;
 
 const RightWrap = styled.div`
