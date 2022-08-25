@@ -3,6 +3,7 @@ import Detail from "../components/Detail";
 import Layout from "../components/Layout";
 import styled from "styled-components";
 import Comment from "../components/Comment";
+import Footer from "../components/Footer";
 
 const DetailPage = () => {
   return (
@@ -11,6 +12,8 @@ const DetailPage = () => {
         <Detail />
         <Comment />
       </ViewPageWrap>
+      <hr />
+      <Footer />
     </Layout>
   );
 };
