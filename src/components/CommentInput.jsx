@@ -24,14 +24,15 @@ const ConmmentInput = () => {
 
   return (
     <CommentWrap>
+        <form onSubmit={onClickHandler}  >
       <InputWrap>
         <BsPlusLg style={{ marginRight: "10px" }} size="30" color="#c4c4c4eb" />
-        <Input
-        disabled={!token?true:false}
-        value={input} type="text" onChange={onChangeHandler} LenmaxLength="30" placeholder="30자 이하로 입력해주세요" />
-        {/* <BiSmile size="35" color="#d6d6d6eb" /> */}
-        <ButtonImg onClick={onClickHandler} chatting={chatting} />
+          <Input
+          disabled={!token?true:false}
+          value={input} type="text" onChange={onChangeHandler} LenmaxLength="30" placeholder="30자 이하로 입력해주세요" />
+          <ButtonImg  disabled={!token?true:false}  chatting={chatting} />
       </InputWrap>
+        </form>
     </CommentWrap>
   );
 };
@@ -56,7 +57,7 @@ const CommentWrap = styled.div`
   margin: auto;
 `;
 
-const ButtonImg = styled.div`
+const ButtonImg = styled.button`
   cursor: pointer;
   background-image: url(${(props) => props.chatting});
   display: inline-block;
@@ -67,6 +68,7 @@ const ButtonImg = styled.div`
   background-position: center;
   margin: 0;
   overflow: hidden;
+  border:none;
 `;
 
 const InputWrap = styled.div`
