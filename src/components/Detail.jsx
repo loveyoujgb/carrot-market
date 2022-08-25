@@ -26,7 +26,7 @@ const Detail = () => {
   const param = useParams();
   const { detail, isLoading, error } = useSelector((state) => state.detail);
   const price = +detail.price;
-
+  
   useEffect(() => {
     dispatch(__getDetail(param.id));
     return () => {

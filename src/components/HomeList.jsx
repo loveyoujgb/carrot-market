@@ -1,27 +1,30 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { __readLists } from "../redux/modules/listSlice";
 import { useNavigate } from "react-router-dom";
 
 const HomeList = () => {
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  //전체조회
   useEffect(() => {
-  dispatch(__readLists());
+    dispatch(__readLists());
   }, [dispatch]);
 
-  const {lists} = useSelector((state) => state.lists);
-  console.log(lists)
-  
-  const [region, setRegion]=useState("")
-  const onChangeRegion=(e=>{
-    setRegion(e.currentTarget.value)
-  })
+  const lists = useSelector((state) => state.lists.lists);
+  console.log(lists);
+
+  //지역조회
+  const [region, setRegion] = useState("");
+  const onChangeRegion = (e) => {
+    setRegion(e.target.value);
+    dispatch(__readLists({ category: category, region: e.target.value }));
+  };
 
   const regionOptions = [
-    { key: 1, value: "지역을 선택하세요" },
+    { key: 1, value: "" },
     { key: 2, value: "서울특별시" },
     { key: 3, value: "부산광역시" },
     { key: 4, value: "인천광역시" },
@@ -35,12 +38,16 @@ const HomeList = () => {
     // { key: 12, value: "경상남도" },
     // { key: 13, value: "제주특별자치도" },
   ];
-const [category,setCategory]=useState("");
-const onChangeCategory=(e)=>{
-  setCategory(e.currentTarget.value)
-}
+
+  //카테고리조회
+  const [category, setCategory] = useState("");
+  const onChangeCategory = (e) => {
+    setCategory(e.target.value);
+    return dispatch(__readLists({ category: e.target.value, region: region }));
+  };
+  console.log(category);
   const categoryOptions = [
-    { key: 1, value: "카테고리를 선택하세요" },
+    { key: 1, value: "" },
     { key: 2, value: "생활가전" },
     { key: 3, value: "생활용품" },
     { key: 4, value: "의류" },
@@ -48,42 +55,54 @@ const onChangeCategory=(e)=>{
     { key: 6, value: "디지털기기" },
   ];
 
-
   return (
     <HomeListWrap>
       <HomeListTitle>중고거래 인기매물</HomeListTitle>
       <SelectBox>
         <div>
           <StSelect onChange={onChangeRegion} value={region}>
-          {regionOptions.map((region)=>(
-            <option key={region.key} value={region.value}>{region.value}</option>
-          ))}
+            {regionOptions.map((region) => (
+              <option key={region.key} value={region.value}>
+                {region.value === "" ? "지역을 선택해 주세요!" : region.value}
+              </option>
+            ))}
           </StSelect>
         </div>
         <div>
           <StSelect onChange={onChangeCategory} value={category}>
-           {categoryOptions.map((category)=>(
-            <option key={category.key} value={category.value}>{category.value}</option>
-           ))}
+            {categoryOptions.map((category) => (
+              <option key={category.key} value={category.value}>
+                {category.value === ""
+                  ? "카테고리를 선택해 주세요"
+                  : category.value}
+              </option>
+            ))}
           </StSelect>
         </div>
       </SelectBox>
       <ListWrap>
-        {lists?.map((list,idx)=>(
-        <BoxWrap key={idx} onClick={()=> navigate(`/detail/${list.id}`)}>
-          <ImageBox src={list.img[0].imgUrl} />
-          <ContentWrap>
-            <BoxContent margin="6px 0">{list.title}</BoxContent>
-            <BoxContent margin="2px 0" bold="bold">
-              {list.price}
-            </BoxContent>
-            <BoxContent size="0.8rem">{list.region}</BoxContent>
-            <BoxContent size="0.8rem">
-              <span>관심 {list.heartCnt}</span>∙<span>댓글 {list.commentCnt}</span>
-            </BoxContent>
-          </ContentWrap>
-        </BoxWrap>     
-        ))}
+        {lists?.map((list, idx) => {
+          const price = +list.price;
+          return (
+            <BoxWrap key={idx} onClick={() => navigate(`/detail/${list.id}`)}>
+              <ImageBox src={list.img[0].imgUrl} />
+              <ContentWrap>
+                <BoxContent margin="6px 0">{list.title}</BoxContent>
+                <BoxContent margin="2px 0" bold="bold">
+                  {price.toLocaleString()}원
+                </BoxContent>
+                <BoxContent size="0.8rem">
+                  {list.region}
+                  {list.category}
+                </BoxContent>
+                <BoxContent size="0.8rem">
+                  <span>관심 {list.heartCnt}</span>∙
+                  <span>댓글 {list.commentCnt}</span>
+                </BoxContent>
+              </ContentWrap>
+            </BoxWrap>
+          );
+        })}
       </ListWrap>
     </HomeListWrap>
   );
@@ -111,19 +130,18 @@ const HomeListTitle = styled.h1`
   }
 `;
 
-
 const SelectBox = styled.div`
   gap: 10px;
   padding: 10px 0;
   border-bottom: 1px solid #e9ecef;
-  display:flex;
-  justify-content:right;
-  margin-right:15%;
+  display: flex;
+  justify-content: right;
+  margin-right: 15%;
   @media screen and (max-width: 556px) {
     text-align: center;
-    display:flex;
-    flex-direction:column;
-    margin-right:0px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 0px;
     /* justify-content:center; */
   }
 `;
@@ -141,10 +159,9 @@ const StSelect = styled.select`
     outline: none;
   }
   @media screen and (max-width: 556px) {
-   width:70%
+    width: 70%;
   }
 `;
-
 
 const ListWrap = styled.div`
   display: flex;

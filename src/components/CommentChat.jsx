@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { __readComments } from "../redux/modules/commentsSlice";
+import { clearComments, __readComments } from "../redux/modules/commentsSlice";
 import Buyer from "./Buyer";
 import Seller from "./Seller";
 
@@ -13,6 +13,7 @@ const CommentChat = () => {
 
   useEffect(() => {
     dispatch(__readComments(detailId));
+    return()=>dispatch(clearComments())
   }, [dispatch]);
   const { comments } = useSelector((state) => state.comments);
   const username = useSelector((state) => state.detail.detail.username);

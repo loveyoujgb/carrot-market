@@ -11,15 +11,17 @@ export const __readLists = createAsyncThunk(
   "getLists",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
-      console.log(data.data)
-      return thunkAPI.fulfillWithValue(data.data);
+      const data = await axios.get(`${process.env.REACT_APP_API_URL}/article`, {
+        params: payload,
+      });
+      return thunkAPI.fulfillWithValue(data.data.content);
     } catch (error) {
-      console.log(error);
       return thunkAPI.rejected(error);
     }
   }
 );
+
+
 
 export const listsSlice = createSlice({
   name: "lists",
@@ -29,7 +31,7 @@ export const listsSlice = createSlice({
     [__readLists.pending]: (state) => {
       state.isLoading = true;
     },
-    [__readLists.fulfilled]: (state, {payload}) => {
+    [__readLists.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
       state.lists = payload;
     },

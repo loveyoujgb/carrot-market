@@ -1,29 +1,25 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useDispatch} from "react-redux";
 import styled from "styled-components";
 import { __deleteComments } from "../redux/modules/commentsSlice";
 
 const Buy = ({ comment }) => {
-  console.log(comment);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const DoubleClickHandler = () => {
     if (member === comment.username) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
-        alert("삭제되었습니다");
-        navigate("/detail");
+        // alert("삭제되었습니다");
+        // navigate("/detail");
       } else {
-        alert("취소합니다");
-        navigate("/detail");
+        // alert("취소합니다");
+        // navigate("/detail");
       }
     } else return;
   };
   const member = localStorage.getItem("username");
-  console.log(member);
-  console.log(comment.username);
+  
   return (
     <div>
       <SecondMessageWrap>

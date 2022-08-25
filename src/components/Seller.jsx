@@ -1,27 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useDispatch} from "react-redux";
 import styled from "styled-components";
 import { __deleteComments } from "../redux/modules/commentsSlice";
 
-const Sale = ({ comment, username }) => {
-  console.log(comment);
-  const navigate = useNavigate();
+const Sale = ({ comment }) => {
+  const member = localStorage.getItem("username");
   const dispatch = useDispatch();
   const DoubleClickHandler = () => {
     console.log("더블클릭!!");
-    if (username === comment.username) {
+    if (member === comment.username) {
       if (window.confirm("정말 삭제합니까?")) {
         dispatch(__deleteComments(comment.id));
-        alert("삭제되었습니다");
-        navigate("/detail");
-      } else {
-        alert("취소합니다");
-        navigate("/detail");
-      }
+        // alert("삭제되었습니다");
+        // navigate(`/detail/${comment.id}`);
+      } 
     } else return;
   };
-  console.log(comment);
   return (
     <div>
       <FirstMessageWrap>
@@ -32,9 +26,7 @@ const Sale = ({ comment, username }) => {
               {comment.nickname}
             </UsernameText>
             <Message
-              onDoubleClick={() =>
-                username === comment.username ? { DoubleClickHandler } : null
-              }
+              onDoubleClick= { DoubleClickHandler } 
             >
               {comment.content}
             </Message>

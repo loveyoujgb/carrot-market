@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { __getDetail } from "./detailSlice";
 
 const initialState = {
   comments: [],
@@ -12,17 +13,17 @@ export const __postComments = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
-      console.log(payload)
+   
       const data = await axios.post(`${process.env.REACT_APP_API_URL}/comment/auth/${payload.id}`,payload,
       {headers:{
         Authorization:token,
       },
     });
-      console.log(data.data);
+
       thunkAPI.dispatch(__readComments(payload.id))
+      thunkAPI.dispatch(__getDetail(payload.id));
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
-      console.log(error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -32,12 +33,9 @@ export const __readComments = createAsyncThunk(
   "getComments",
   async (payload, thunkAPI) => {
     try {
-      console.log(payload)
       const data = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${payload}`);
-      console.log(data)
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
-      console.log(error);
       return thunkAPI.rejected(error);
     }
   }
@@ -46,7 +44,6 @@ export const __deleteComments = createAsyncThunk(
   "deleteComments",
   async (payload, thunkAPI) => {
     try {
-      console.log(payload)
       const token = localStorage.getItem("token");
       await axios.delete(`${process.env.REACT_APP_API_URL}/comment/auth/${payload}`,{
         headers: {
@@ -63,7 +60,11 @@ export const __deleteComments = createAsyncThunk(
 export const commentsSlice = createSlice({
   name: "comments",
   initialState,
-  reducers: {},
+  reducers: {
+    clearComments:(state)=>{
+state.comments=[]
+    }
+  },
   extraReducers: {
     [__postComments.pending]: (state) => {
       state.isLoading = true;
@@ -71,7 +72,6 @@ export const commentsSlice = createSlice({
     [__postComments.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
       state.comments = [...state.comments, payload.content];
-      console.log(state.comments);
     },
     [__postComments.rejected]: (state) => {
       state.isLoading = false;
@@ -80,7 +80,6 @@ export const commentsSlice = createSlice({
       state.isLoading = true;
     },
     [__readComments.fulfilled]: (state, { payload }) => {
-      console.log(payload.data);
       state.isLoading = false;
       state.comments = payload;
     },
@@ -104,3 +103,4 @@ export const commentsSlice = createSlice({
 
 
 export default commentsSlice.reducer;
+export const { clearComments } = commentsSlice.actions;
