@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { __readLists } from "./listSlice";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -34,6 +35,7 @@ export const __deleteDetail = createAsyncThunk("deleteDetail", async (payload, t
         Authorization: token,
       },
     });
+    thunkAPI.dispatch(__readLists());
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { cleartDetail } from "../redux/modules/detailSlice";
 
 const Edit = () => {
   const { detail } = useSelector((state) => state.detail);
+  const dispatch = useDispatch();
   const API_URL = process.env.REACT_APP_API_URL;
   const param = useParams();
   const username = localStorage.getItem("username");
@@ -22,6 +24,9 @@ const Edit = () => {
       navigate("/");
       return;
     }
+    return () => {
+      dispatch(cleartDetail());
+    };
   }, []);
 
   const onClickChangeSubmit = async () => {
