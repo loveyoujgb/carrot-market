@@ -9,7 +9,7 @@ const Sale = ({ comment }) => {
   const DoubleClickHandler = () => {
     if (+member === +comment.userId) {
       if (window.confirm("정말 삭제합니까?")) {
-        dispatch(__deleteComments(comment.userId));
+        dispatch(__deleteComments(comment.id));
         // alert("삭제되었습니다");
         // navigate(`/detail/${comment.id}`);
       }
