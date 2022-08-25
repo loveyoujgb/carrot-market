@@ -4,9 +4,12 @@ import { MdOutlineArrowBackIos, MdAddAPhoto, MdOutlinePostAdd, MdOutlineTune } f
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import { cleartDetail } from "../redux/modules/detailSlice";
+import { useDispatch } from "react-redux";
 
 const Form = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const API_URL = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
@@ -18,7 +21,7 @@ const Form = () => {
 
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
-    maxSize: 1000000, //1메가
+    maxSize: 20000000, //20메가
     accept: {
       "image/jpeg": [],
       "image/png": [],
@@ -65,8 +68,10 @@ const Form = () => {
       alert("로그인을 해주세요");
       return;
     }
-    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
+    return () => {
+      dispatch(cleartDetail());
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
+    };
   }, []);
 
   const onClickSubmit = async () => {
